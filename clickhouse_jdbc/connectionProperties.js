@@ -5,12 +5,12 @@
     // setting Session ID (pseudo-random number)
     props["session_id"] = Math.floor(Math.random() * (Math.floor(100) - Math.ceil(1) + 1)) + Math.ceil(1);
 
-    // setting Buffer Size default value (in bytes)
-    props["buffer_size"] = 65536;
+    // setting Connection Timeout default value (in milliseconds)
+    props["connection_timeout"] = 10000;
 
-	// setting Buffer Size value (in bytes) specified by user
+	// setting Connection Timeout value (in milliseconds) specified by user
 	if(attr[connectionHelper.attributeVendor1] && attr[connectionHelper.attributeVendor1].length > 0){ 
-	   	props["buffer_size"] = attr[connectionHelper.attributeVendor1];
+	   	props["connection_timeout"] = attr[connectionHelper.attributeVendor1];
 	}
 
 	// setting custom attributes
