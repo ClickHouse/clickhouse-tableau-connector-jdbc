@@ -415,7 +415,8 @@
       <argument type='int' />
     </function>
     <function group='string' name='SPLIT' return-type='str'>
-      <formula>splitByString(%2,%1)[%3]</formula>
+      <formula>toString(arrayElement(splitByString(&apos;%2&apos;,%1),%3))
+      </formula>
       <argument type='str' />
       <argument type='localstr' />
       <argument type='localint' />
