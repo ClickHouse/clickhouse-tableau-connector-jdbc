@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<connection-fields>
+  <field name='server' label='Server' category='endpoint' value-type='string' />
+    <validation-rule reg-exp="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$"/>
+  <field name='port' label='Port' category='endpoint' value-type='string' default-value='' />
+  <field name='authentication' label='Authentication' category='authentication' value-type='string' editable='false' default-value='auth-user-pass' />
+  <field name='username' label='Username' category='authentication' value-type='string' />
+  <field name='password' label='Password' category='authentication' value-type='string' secure='true' />
+  <field name='sslmode' label='SSL' value-type='boolean' category='general' default-value='' >
+    <boolean-options>
+      <false-value value='' />
+      <true-value value='require' />
+    </boolean-options>
+  </field>
+  <field name='vendor1' label='Buffer Size' category='advanced' value-type='string' optional='true' default-value='65536'>
+    <validation-rule reg-exp='^([0-9]*)$'/>
+  </field>
+  <field name='vendor2' label='Custom Parameters' category='advanced' value-type='string' optional='true'>
+    <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_]+;)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_]+))?)$'/>
+  </field>
+</connection-fields>
