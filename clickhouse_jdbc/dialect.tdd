@@ -438,11 +438,6 @@
       <formula>UPPER(%1)</formula>
       <argument type='str' />
     </function>
-    <function group='string' name='XPATH_Nullable(String)' return-type='str'>
-      <formula>XPATH_Nullable(String)(%1,%2)</formula>
-      <argument type='str' />
-      <argument type='str' />
-    </function>
     <function group='cast' name='DATE' return-type='date'>
       <formula>toDate(%1)</formula>
       <argument type='real' />
@@ -734,11 +729,6 @@
     <function group='logical' name='ISNULL' return-type='bool'>
       <formula>(%1 IS NULL)</formula>
       <argument type='spatial' />
-    </function>
-    <function group='logical' name='XPATH_BOOLEAN' return-type='bool'>
-      <formula>XPATH_BOOLEAN(%1,%2)</formula>
-      <argument type='str' />
-      <argument type='str' />
     </function>
     <function group='aggregate' name='AVG' return-type='real'>
       <formula>AVG(%1)</formula>
