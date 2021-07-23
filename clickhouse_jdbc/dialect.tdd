@@ -360,29 +360,29 @@
       <argument type='str' />
     </function>
     <function group='string' name='REGEXP_EXTRACT' return-type='str'>
-      <formula>REGEXP_REPLACE( REGEXP_SUBSTR( %1, %2), %2, &apos;\1&apos;, 1, 1, &apos;c&apos; )</formula>
+      <formula>replaceRegexpAll(toString(extract(%1,%2)), '[\[\]\']' , '')</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
     <function group='string' name='REGEXP_EXTRACT_NTH' return-type='str'>
-      <formula>TABLEAU.REGEXP_EXTRACT_NTH(%1, %2, %3)</formula>
+      <formula>toString(arrayElement(arrayFlatten(extractAllGroupsVertical(%1,%2)),%3))</formula>
       <argument type='str' />
       <argument type='str' />
       <argument type='localint' />
     </function>
     <function group='string' name='REGEXP_MATCH' return-type='bool'>
-      <formula>REGEXP_LIKE(%1, %2)</formula>
+      <formula>match(%1, %2)</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
     <function group='string' name='REGEXP_REPLACE' return-type='str'>
-      <formula>TABLEAU.REGEXP_REPLACE(%1, %2, %3, &apos;g&apos;)</formula>
+      <formula>replaceRegexpAll(%1, %2, %3)</formula>
       <argument type='str' />
       <argument type='str' />
       <argument type='str' />
     </function>
     <function group='string' name='REPLACE' return-type='str'>
-      <formula>REPLACE(CAST(%1 AS Nullable(TEXT)), CAST(%2 AS Nullable(TEXT)), CAST(%3 AS Nullable(TEXT)))</formula>
+      <formula>replaceAll(CAST(%1 AS Nullable(TEXT)), CAST(%2 AS Nullable(TEXT)), CAST(%3 AS Nullable(TEXT)))</formula>
       <argument type='str' />
       <argument type='str' />
       <argument type='str' />
