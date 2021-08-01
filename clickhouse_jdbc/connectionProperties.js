@@ -23,7 +23,7 @@
 	}
 
     props["user"] = attr[connectionHelper.attributeUsername];
-    props["password"] = attr[connectionHelper.attributePassword];
+    props["password"] = attr[connectionHelper.attributePassword].trim();
    
     if (attr[connectionHelper.attributeSSLMode] == "require") {
         props["ssl"] = "true";

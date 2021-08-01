@@ -1,10 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
+
 <connection-fields>
   <field name='server' label='Server' category='endpoint' value-type='string' />
   <field name='port' label='Port' category='endpoint' value-type='string' default-value='' />
   <field name='authentication' label='Authentication' category='authentication' value-type='string' editable='false' default-value='auth-user-pass' />
   <field name='username' label='Username' category='authentication' value-type='string' />
-  <field name='password' label='Password' category='authentication' value-type='string' secure='true' />
+  <field name='password' label='Password' category='authentication' value-type='string' secure='true' default-value=' ' />
   <field name='sslmode' label='SSL' value-type='boolean' category='general' default-value='' >
     <boolean-options>
       <false-value value='' />
