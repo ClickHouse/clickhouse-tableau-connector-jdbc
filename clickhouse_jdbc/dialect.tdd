@@ -1726,5 +1726,14 @@
     -->
     <format-date-literal formula="toDate('%1', '%2')"  format='yyyy-MM-dd' />
     <format-datetime-literal formula="toDateTime('%1', '%2')" format='yyyy-MM-ddTHH:mm:ss.SSSZ' />
+    <!--
+      format-is-distinct
+      Defines a strategy for determining whether two values are distinct.
+      NoNullCheck: (lhs [!]= rhs)
+      Keyword: (lhs IS [NOT ]DISTINCT FROM rhs)
+      Operator: ([NOT (]lhs <=> rhs[)])
+      [Default]Formula: ((lhs [!]= rhs) OR[AND] (lhs IS [NOT] NULL AND[OR] rhs IS [NOT] NULL))
+    -->
+    <format-is-distinct value='NoNullCheck' />
   </sql-format>
 </dialect>
