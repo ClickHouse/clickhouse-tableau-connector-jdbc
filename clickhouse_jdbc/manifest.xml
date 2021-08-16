@@ -30,7 +30,7 @@
       <customization name='CAP_QUERY_INOUT_JOINS' value='yes'/>
       <customization name='CAP_QUERY_JOIN_ACROSS_SCHEMAS' value='yes'/>
       <customization name='CAP_QUERY_JOIN_PUSH_DOWN_CONDITION_EXPRESSIONS' value='yes'/>
-      <customization name='CAP_QUERY_JOIN_REQUIRES_SCOPE' value='no'/>
+      <customization name='CAP_QUERY_JOIN_REQUIRES_SCOPE' value='yes'/>
       <customization name='CAP_QUERY_JOIN_REQUIRES_SUBQUERY' value='yes' />
       <customization name='CAP_QUERY_SCALAR_SELECTS_ALL_IN_GROUP_BYS' value='yes' />
       <customization name='CAP_QUERY_SORT_BY' value='yes'/>

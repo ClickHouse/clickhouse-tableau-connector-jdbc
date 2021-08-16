@@ -690,13 +690,13 @@
       <argument type='date' />
     </function>
     <function group='logical' name='IIF' return-type='spatial'>
-      <formula>CASE %1 WHEN TRUE THEN %2 WHEN FALSE THEN %3 ELSE NULL END</formula>
+      <formula>CASE WHEN %1 THEN %2 WHEN NOT %1 THEN %3 ELSE NULL END</formula>
       <argument type='bool' />
       <argument type='spatial' />
       <argument type='spatial' />
     </function>
     <function group='logical' name='IIF' return-type='spatial'>
-      <formula>CASE %1 WHEN TRUE THEN %2 WHEN FALSE THEN %3 ELSE %4 END</formula>
+      <formula>CASE WHEN %1 THEN %2 WHEN NOT %1 THEN %3 ELSE %4 END</formula>
       <argument type='bool' />
       <argument type='spatial' />
       <argument type='spatial' />
@@ -1735,5 +1735,11 @@
       [Default]Formula: ((lhs [!]= rhs) OR[AND] (lhs IS [NOT] NULL AND[OR] rhs IS [NOT] NULL))
     -->
     <format-is-distinct value='NoNullCheck' />
+    <!--
+      format-simple-case
+      [Default]Case
+      BalancedIIF
+    -->
+    <format-simple-case value='BalancedIIF' />
   </sql-format>
 </dialect>
