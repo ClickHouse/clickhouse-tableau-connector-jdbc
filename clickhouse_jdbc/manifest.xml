@@ -12,7 +12,6 @@
       <!--Initial SQL-->
       <customization name='CAP_SUPPORTS_INITIAL_SQL' value='yes'/>
       <!--JDBC-->
-      <customization name='CAP_CONNECT_STORED_PROCEDURE' value='no'/>
       <customization name='CAP_JDBC_QUERY_ASYNC' value='no'/>
       <customization name='CAP_JDBC_QUERY_CANCEL' value='yes'/>
       <!--Metadata-->
@@ -21,7 +20,6 @@
       <customization name='CAP_QUERY_WHERE_FALSE_METADATA' value='yes'/>
       <!--Query-->
       <customization name='CAP_QUERY_BOOL_IDENTIFIER_TO_LOGICAL' value='yes'/>
-      <customization name='CAP_QUERY_BOOLEXPR_TO_INTEXPR' value='no' />
       <customization name='CAP_QUERY_GROUP_BY_ALIAS' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_BOOL' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_DEGREE' value='no'/>
@@ -37,6 +35,7 @@
       <customization name='CAP_QUERY_SORT_BY_DEGREE' value='no'/>
       <customization name='CAP_QUERY_SUBQUERIES' value='yes'/>
       <customization name='CAP_QUERY_SUBQUERIES_WITH_TOP' value='yes'/>
+      <customization name='CAP_QUERY_SUPPORTS_UNIQUE_IDENTIFIER' value='yes' />
       <customization name='CAP_QUERY_TOP_N' value='yes'/>
       <customization name='CAP_QUERY_TOP_SAMPLE' value='yes'/>
       <!--String Splits-->
