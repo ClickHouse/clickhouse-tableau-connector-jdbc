@@ -5,6 +5,12 @@
     // setting Session ID (pseudo-random number)
     props["session_id"] = Math.floor(Math.random() * (Math.floor(100) - Math.ceil(1) + 1)) + Math.ceil(1);
 
+    // setting Tableau to use ClickHouse server timezone
+    props["use_server_time_zone"] = 1;
+
+    // setting Tableau to use ClickHouse server timezone for dates
+    props["use_server_time_zone_for_dates"] = 1;
+
     // setting Connection Timeout default value (in milliseconds)
     props["connection_timeout"] = 10000;
 
@@ -32,3 +38,4 @@
 
     return props;
 })
+
