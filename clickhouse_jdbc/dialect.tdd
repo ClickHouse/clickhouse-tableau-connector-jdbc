@@ -440,8 +440,14 @@
       <formula>CAST(%1 AS Nullable(DATE))</formula>
       <argument type='date' />
     </function>
+    <!--
     <function group='cast' name='DATETIME' return-type='datetime'>
       <formula>(CAST(CAST(&apos;1900-01-01&apos; AS Nullable(DATE)) + CAST(%1 AS Nullable(INTEGER)) AS Nullable(TIMESTAMP)) +  CAST((%1 - CAST(%1 AS Nullable(INTEGER))) * 24 AS Nullable(INTEGER)) * INTERVAL &apos;1&apos; HOUR + CAST((%1 * 24  - CAST(%1 * 24 AS Nullable(INTEGER))) * 60 AS Nullable(INTEGER)) * INTERVAL &apos;1&apos; MINUTE + CAST((%1 * 24 * 60  - CAST(%1 * 24 * 60 AS Nullable(INTEGER))) * 60 AS DECIMAL(6)) * INTERVAL &apos;1&apos; SECOND)</formula>
+      <argument type='real' />
+    </function>
+    -->
+    <function group='cast' name='DATETIME' return-type='datetime'>
+      <formula>toDateTime(%1)</formula>
       <argument type='real' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
@@ -1022,7 +1028,7 @@
       <argument type='str' />
     </function>
     <function group='operator' name='+' return-type='datetime'>
-      <formula>cast(%1 AS Nullable(DATETIME)) + %2</formula>
+      <formula>(CAST(%1 AS Nullable(DATETIME)) + %2 * 86400.0)</formula>
       <argument type='datetime' />
       <argument type='real' />
     </function>
@@ -1031,18 +1037,20 @@
       <argument type='datetime' />
       <argument type='int' />
     </function>
+    <!--
     <function group='operator' name='+' return-type='datetime'>
       <formula>CASE WHEN CAST(TRUNCATE((%2 * 24 * 60 - CAST(TRUNCATE(%2 * 24 * 60,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;s&apos;, CAST(CAST(TRUNCATE((%2 * 24 * 60 - CAST(TRUNCATE(%2 * 24 * 60,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE((%2 * 24 - CAST(TRUNCATE(%2 * 24,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;mi&apos;, CAST(CAST(TRUNCATE((%2 * 24 - CAST(TRUNCATE(%2 * 24,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE((%2 - CAST(TRUNCATE(%2,0) AS Nullable(INTEGER))) * 24,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;hh&apos;, CAST(CAST(TRUNCATE((%2 - CAST(TRUNCATE(%2,0) AS Nullable(INTEGER))) * 24,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE(%2,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;d&apos;, CAST(CAST(TRUNCATE(%2,0) AS Nullable(INTEGER)) AS BIGINT), CAST(%1 AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
-    <function group='operator' name='+' return-type='date'>
-      <formula>DATE_ADD(DAY, %2, %1)</formula>
+    -->
+    <function group='operator' name='+' return-type='datetime'>
+      <formula>(toDateTime(%1) + %2 * 86400.0)</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
     <function group='operator' name='+' return-type='date'>
-      <formula>DATE_ADD(DAY, %2, %1)</formula>
+      <formula>(%1 + %2)</formula>
       <argument type='date' />
       <argument type='int' />
     </function>
@@ -1071,7 +1079,7 @@
       <argument type='datetime' />
     </function>
     <function group='operator' name='-' return-type='real'>
-      <formula>(%1 - %2)</formula>
+      <formula>(toDateTime(%1) - toDateTime(%2)) / 86400.0</formula>
       <argument type='date' />
       <argument type='date' />
     </function>
@@ -1090,7 +1098,7 @@
       <argument type='date' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>subtractDays(%1,TRUNC(%2))</formula>
+      <formula>(%1 - %2 * 86400.0)</formula>
       <argument type='datetime' />
       <argument type='real' />
     </function>
@@ -1100,15 +1108,17 @@
       <argument type='int' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>(toDateTime(%1) - %2</formula>
+      <formula>(toDateTime(%1) - %2 * 86400.0)</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
+    <!--
     <function group='operator' name='-' return-type='date'>
-      <formula>(%1 - TRUNC(%2))</formula>
+      <formula>(toDateTime(%1) - TRUNC(%2 * 86400.0))</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
+  -->
     <function group='operator' name='-' return-type='date'>
       <formula>(%1 - %2)</formula>
       <argument type='date' />
@@ -1450,52 +1460,124 @@
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='date' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='date' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END)), toStartOfWeek(%3, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END))) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='datetime' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END)), toStartOfWeek(%3, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END))) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='date' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END)), toStartOfWeek(%3, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END))) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='datetime' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
-      <formula>toNullable(dateDiff('%1', %2, %3))</formula>
+      <formula part='year'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='quarter'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='month'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='dayofyear'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='day'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='weekday'>CAST(dateDiff('day', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END)), toStartOfWeek(%3, (CASE WHEN %4=0 THEN 8 WHEN %4=1 THEN 9 ELSE 8 END))) AS Nullable(INTEGER))</formula>
+      <formula part='hour'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='minute'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='second'>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='date' />
@@ -1552,7 +1634,7 @@
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
-      <formula part='weekday'>toDayOfWeek(%2)</formula>
+      <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, 8)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
@@ -1586,6 +1668,7 @@
       <argument type='date' />
       <argument type='localstr' />
     </date-function>
+    <!--
     <date-function name='DATETRUNC' return-type='datetime'>
       <formula>CAST(date_trunc('%1', %2) AS Nullable(DateTime))</formula>
       <argument type='localstr' />
@@ -1596,8 +1679,48 @@
       <argument type='localstr' />
       <argument type='date' />
     </date-function>
+    -->
+    <date-function name='DATETRUNC' return-type='datetime'>
+      <formula part='year'>toStartOfYear(%2)</formula>
+      <formula part='quarter'>toStartOfQuarter(%2)</formula>
+      <formula part='month'>toStartOfMonth(%2)</formula>
+      <formula part='week'>toStartOfWeek(%2, 8)</formula>
+      <formula part='dayofyear'>toStartOfDay(%2)</formula>
+      <formula part='day'>toStartOfDay(%2)</formula>
+      <formula part='weekday'>toStartOfDay(%2)</formula>
+      <formula part='hour'>toStartOfHour(%2)</formula>
+      <formula part='minute'>toStartOfMinute(%2)</formula>
+      <formula part='second'>toStartOfSecond(toDateTime64(%2,3))</formula>
+      <argument type='localstr' />
+      <argument type='datetime' />
+    </date-function>
+    <date-function name='DATETRUNC' return-type='datetime'>
+      <formula part='year'>toStartOfYear(toDateTime(%2))</formula>
+      <formula part='quarter'>toStartOfQuarter(toDateTime(%2))</formula>
+      <formula part='month'>toStartOfMonth(toDateTime(%2))</formula>
+      <formula part='week'>toStartOfWeek(toDateTime(%2), 8)</formula>
+      <formula part='dayofyear'>toStartOfDay(%2)</formula>
+      <formula part='day'>toStartOfDay(toDateTime(%2))</formula>
+      <formula part='weekday'>toStartOfDay(%2)</formula>
+      <formula part='hour'>toStartOfHour(toDateTime(%2))</formula>
+      <formula part='minute'>toStartOfMinute(toDateTime(%2))</formula>
+      <formula part='second'>toStartOfSecond(toDateTime64(%2,3))</formula>
+      <argument type='localstr' />
+      <argument type='date' />
+    </date-function>
+    <date-function name='DATETRUNC' return-type='datetime'>
+      <formula part='week'>toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <argument type='localstr' />
+      <argument type='datetime' />
+      <argument type='localstr' />
+    </date-function>
+    <date-function name='DATETRUNC' return-type='datetime'>
+      <formula part='week'>toStartOfWeek(toDateTime(%2), (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <argument type='localstr' />
+      <argument type='date' />
+      <argument type='localstr' />
+    </date-function>
   </function-map>
-
   <!--
     supported-aggregations
     Comprehensive list of supported aggregations and date truncations
@@ -1731,5 +1854,13 @@
       BalancedIIF
     -->
     <format-simple-case value='BalancedIIF' />
+    <!--
+      start-of-week-offset
+      Tableau's start of week functions assume Sunday is 0.
+      This is used to specify an offset. For example, if the
+      database says Sunday is 1, the offset value should be 1.
+      If Sunday is 6, the offset value should be either 6 or -1.
+    -->
+    <start-of-week-offset value='0' />
   </sql-format>
 </dialect>
