@@ -267,12 +267,14 @@
       <argument type='str' />
       <argument type='int' />
     </function>
+    <!--
     <function group='string' name='FINDNTH' return-type='int'>
-      <formula>TABLEAU.FINDNTH(%1, %2, CAST(%3 AS Nullable(UInt8)))</formula>
+      <formula>arrayElement(multiSearchAllPositions(%1, [%2]), CAST(%3 AS Nullable(UInt8)))</formula>
       <argument type='str' />
       <argument type='str' />
       <argument type='real' />
     </function>
+    -->
     <function group='string' name='GET_JSON_OBJECT' return-type='str'>
       <formula>JSON_QUERY(%2,%1)</formula>
       <argument type='str' />
@@ -876,6 +878,26 @@
       <unagg-formula>%1</unagg-formula>
       <argument type='date' />
     </function>
+    <function group='aggregate' name='KURTOSIS' return-type='real'>
+      <formula>kurtSamp(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='KURTOSIS' return-type='real'>
+      <formula>kurtSamp(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='KURTOSISP' return-type='real'>
+      <formula>kurtPop(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='KURTOSISP' return-type='real'>
+      <formula>kurtPop(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+    </function>
     <function group='aggregate' name='PERCENTILE' return-type='real'>
       <formula>quantile(%2)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
@@ -887,6 +909,26 @@
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
       <argument type='localreal' />
+    </function>
+   <function group='aggregate' name='SKEWNESS' return-type='real'>
+      <formula>skewSamp(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='SKEWNESS' return-type='real'>
+      <formula>skewSamp(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='SKEWNESSP' return-type='real'>
+      <formula>skewPop(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='SKEWNESSP' return-type='real'>
+      <formula>skewPop(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
     </function>
     <function group='aggregate' name='STDEV' return-type='real'>
       <formula>STDDEV_SAMP(%1)</formula>
@@ -1744,11 +1786,11 @@
     <aggregation value='AGG_ATTR'/>
     <aggregation value='AGG_MEDIAN'/>
     <aggregation value='AGG_PERCENTILE'/>
+    <aggregation value='AGG_SKEWNESS'/>
+    <aggregation value='AGG_KURTOSIS'/>
 <!--
     <aggregation value='AGG_QUART1'/>
     <aggregation value='AGG_QUART3'/>
-    <aggregation value='AGG_SKEWNESS'/>
-    <aggregation value='AGG_KURTOSIS'/>
     <aggregation value='AGG_INOUT'/>
     <aggregation value='AGG_USER'/>
 -->
