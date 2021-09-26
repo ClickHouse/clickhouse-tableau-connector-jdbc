@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='utf-8' ?>
-
 <dialect name='ClickHouse'
          class='clickhouse_jdbc'
          version='18.1'>
@@ -423,7 +422,7 @@
       <argument type='str' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
-      <formula>toDate(%1)</formula>
+      <formula>toDate(%1 * 86400.0)</formula>
       <argument type='real' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
@@ -431,7 +430,7 @@
       <argument type='int' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
-      <formula>parseDateTimeBestEffort(%1)</formula>
+      <formula>toDate(parseDateTimeBestEffortOrNull(%1))</formula>
       <argument type='str' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
@@ -457,7 +456,7 @@
       <argument type='int' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
-      <formula>toDateTime(parseDateTimeBestEffortOrNull(%1))</formula>
+      <formula>parseDateTimeBestEffortOrNull(%1)</formula>
       <argument type='str' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
@@ -517,28 +516,28 @@
       <argument type='date' />
     </function>
     <function group='cast' name='MAKEDATE' return-type='date'>
-      <formula>TABLEAU.MAKE_DATE(CAST(%1 AS Nullable(INTEGER)),CAST(%2 AS Nullable(INTEGER)),CAST(%3 AS Nullable(INTEGER)))</formula>
+      <formula>addDays(addMonths(addYears(DATE '1970-01-01', CAST(%1 AS Nullable(INTEGER)) -1970), CAST(%2 AS Nullable(INTEGER)) -1), CAST(%3 AS Nullable(INTEGER)) -1)</formula>
       <argument type='int' />
       <argument type='int' />
       <argument type='int' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>ADDTIME(CAST(CAST(%1 AS Nullable(DATE)) AS Nullable(DATETIME)), TIME(%2))</formula>
+      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
       <argument type='str' />
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>ADDTIME(CAST(CAST(%1 AS Nullable(DATE)) AS Nullable(DATETIME)), TIME(%2))</formula>
+      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
       <argument type='datetime' />
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>ADDTIME(CAST(%1 AS Nullable(DATETIME)), TIME(%2))</formula>
+      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
       <argument type='date' />
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKETIME' return-type='datetime'>
-      <formula>(&apos;1899-12-30&apos;::date + TABLEAU.MAKE_TIME(CAST(%1 AS Nullable(INTEGER)),CAST(%2 AS Nullable(INTEGER)),CAST(%3 AS Nullable(INTEGER))))</formula>
+      <formula>addSeconds(addMinutes(addHours(DATE '1970-01-01', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER)))</formula>
       <argument type='int' />
       <argument type='int' />
       <argument type='int' />
@@ -839,12 +838,12 @@
       <argument type='date' />
     </function>
     <function group='aggregate' name='MEDIAN' return-type='real'>
-      <formula>quantile(0.5)(%1)</formula>
+      <formula>quantileExact(0.5)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='MEDIAN' return-type='int'>
-      <formula>quantile(0.5)(%1)</formula>
+      <formula>quantileExact(0.5)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
@@ -899,13 +898,13 @@
       <argument type='int' />
     </function>
     <function group='aggregate' name='PERCENTILE' return-type='real'>
-      <formula>quantile(%2)(%1)</formula>
+      <formula>quantileExact(%2)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
       <argument type='localreal' />
     </function>
     <function group='aggregate' name='PERCENTILE' return-type='real'>
-      <formula>quantile(%2)(%1)</formula>
+      <formula>quantileExact(%2)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
       <argument type='localreal' />
@@ -1092,7 +1091,7 @@
       <argument type='real' />
     </function>
     <function group='operator' name='+' return-type='date'>
-      <formula>(%1 + %2)</formula>
+      <formula>toDate(toDateTime(%1) + %2 * 86400.0)</formula>
       <argument type='date' />
       <argument type='int' />
     </function>
@@ -1666,7 +1665,7 @@
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEPARSE' return-type='datetime'>
-      <formula>parseDateTimeBestEffort32(%2, %1)</formula>
+      <formula>parseDateTimeBestEffortOrNull(%2, %1))</formula>
       <argument type='localstr' />
       <argument type='str' />
     </date-function>
@@ -1879,8 +1878,8 @@
       Specifies a formula for expressing a date literal, as well as an *ICU* date format.
       %1 is the format string and %2 is the formatted date literal.
     -->
-    <format-date-literal formula="toDate('%1', '%2')"  format='yyyy-MM-dd' />
-    <format-datetime-literal formula="toDateTime('%1', '%2')" format='yyyy-MM-ddTHH:mm:ss.SSS' />
+    <format-date-literal formula="toDate('%1')" format='yyyy-MM-dd' />
+    <format-datetime-literal formula="parseDateTimeBestEffortOrNull('%1')" format='yyyy-MM-dd HH:mm:ss' />
     <!--
       format-is-distinct
       Defines a strategy for determining whether two values are distinct.
@@ -1890,19 +1889,11 @@
       [Default]Formula: ((lhs [!]= rhs) OR[AND] (lhs IS [NOT] NULL AND[OR] rhs IS [NOT] NULL))
     -->
     <format-is-distinct value='NoNullCheck' />
-    <!--
+      <!--
       format-simple-case
       [Default]Case
       BalancedIIF
     -->
     <format-simple-case value='BalancedIIF' />
-    <!--
-      start-of-week-offset
-      Tableau's start of week functions assume Sunday is 0.
-      This is used to specify an offset. For example, if the
-      database says Sunday is 1, the offset value should be 1.
-      If Sunday is 6, the offset value should be either 6 or -1.
-    -->
-    <start-of-week-offset value='0' />
   </sql-format>
 </dialect>

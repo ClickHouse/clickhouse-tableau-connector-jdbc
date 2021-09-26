@@ -1,22 +1,21 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.0.2' name='ClickHouse (JDBC)' version='18.1' min-version-tableau='2020.4'>
+<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.0.3' name='ClickHouse (JDBC)' version='18.1' min-version-tableau='2020.4'>
   <vendor-information>
       <company name='Analytika Plus'/>
-      <support-link url='https://analytikaplus.ru'/>
+      <support-link url='https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues'/>
       <driver-download-link url='https://github.com/ClickHouse/clickhouse-jdbc/releases'/>
   </vendor-information>
   <connection-customization class='clickhouse_jdbc' enabled='true' version='10.0'>
     <vendor name='vendor'/>
     <driver name='driver'/>
 
-    <customizations>
+     <customizations>
       <!--Initial SQL-->
       <customization name='CAP_SUPPORTS_INITIAL_SQL' value='yes'/>
       <!--JDBC-->
       <customization name='CAP_JDBC_QUERY_ASYNC' value='no'/>
       <customization name='CAP_JDBC_QUERY_CANCEL' value='yes'/>
       <!--Metadata-->
-      <customization name='CAP_FAST_METADATA' value='yes'/>
       <customization name='CAP_QUERY_TOP_0_METADATA' value='yes'/>
       <customization name='CAP_QUERY_WHERE_FALSE_METADATA' value='yes'/>
       <!--Query-->
@@ -38,7 +37,6 @@
       <customization name='CAP_QUERY_SUBQUERIES_WITH_TOP' value='yes'/>
       <customization name='CAP_QUERY_SUPPORTS_UNIQUE_IDENTIFIER' value='yes'/>
       <customization name='CAP_QUERY_TOP_N' value='yes'/>
-      <customization name='CAP_QUERY_TOP_SAMPLE' value='yes'/>
       <!--String Splits-->
       <customization name='CAP_SUPPORTS_SPLIT_FROM_LEFT' value='yes'/>
       <customization name='CAP_SUPPORTS_SPLIT_FROM_RIGHT' value='yes'/>
@@ -46,6 +44,8 @@
       <customization name='CAP_CREATE_TEMP_TABLES' value='no'/>
       <customization name='CAP_SELECT_INTO' value='no'/>
       <customization name='CAP_SELECT_TOP_INTO' value='no'/>
+      <!--Union-->
+      <customization name='CAP_SUPPORTS_UNION' value='yes'/>
     </customizations>
 
   </connection-customization>
