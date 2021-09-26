@@ -700,23 +700,23 @@
       <argument type='spatial' />
     </function>
     <function group='logical' name='ISNULL' return-type='bool'>
-      <formula>ISNULL(%1)</formula>
+      <formula>isNull(%1)</formula>
       <argument type='bool' />
     </function>
     <function group='logical' name='ISNULL' return-type='bool'>
-      <formula>ISNULL(%1)</formula>
+      <formula>isNull(%1)</formula>
       <argument type='real' />
     </function>
     <function group='logical' name='ISNULL' return-type='bool'>
-      <formula>ISNULL(%1)</formula>
+      <formula>isNull(%1)</formula>
       <argument type='str' />
     </function>
     <function group='logical' name='ISNULL' return-type='bool'>
-      <formula>ISNULL(%1)</formula>
+      <formula>isNull(%1)</formula>
       <argument type='datetime' />
     </function>
     <function group='logical' name='ISNULL' return-type='bool'>
-      <formula>ISNULL(%1)</formula>
+      <formula>isNull(%1)</formula>
       <argument type='spatial' />
     </function>
     <function group='aggregate' name='AVG' return-type='real'>
