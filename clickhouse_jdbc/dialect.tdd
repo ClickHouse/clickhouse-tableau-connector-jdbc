@@ -441,12 +441,6 @@
       <formula>CAST(%1 AS Nullable(DATE))</formula>
       <argument type='date' />
     </function>
-    <!--
-    <function group='cast' name='DATETIME' return-type='datetime'>
-      <formula>(CAST(CAST(&apos;1900-01-01&apos; AS Nullable(DATE)) + CAST(%1 AS Nullable(INTEGER)) AS Nullable(TIMESTAMP)) +  CAST((%1 - CAST(%1 AS Nullable(INTEGER))) * 24 AS Nullable(INTEGER)) * INTERVAL &apos;1&apos; HOUR + CAST((%1 * 24  - CAST(%1 * 24 AS Nullable(INTEGER))) * 60 AS Nullable(INTEGER)) * INTERVAL &apos;1&apos; MINUTE + CAST((%1 * 24 * 60  - CAST(%1 * 24 * 60 AS Nullable(INTEGER))) * 60 AS DECIMAL(6)) * INTERVAL &apos;1&apos; SECOND)</formula>
-      <argument type='real' />
-    </function>
-    -->
     <function group='cast' name='DATETIME' return-type='datetime'>
       <formula>toDateTime(%1)</formula>
       <argument type='real' />
@@ -537,7 +531,7 @@
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKETIME' return-type='datetime'>
-      <formula>addSeconds(addMinutes(addHours(DATE '1970-01-01', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER)))</formula>
+      <formula>toTime(addSeconds(addMinutes(addHours(DATE '1970-01-01', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER))))</formula>
       <argument type='int' />
       <argument type='int' />
       <argument type='int' />
@@ -729,11 +723,13 @@
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
+    <!--
     <function group='aggregate' name='COLLECT' return-type='spatial'>
       <formula>geography::CollectionAggregate(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='spatial' />
     </function>
+  -->
     <function group='aggregate' name='CORR' return-type='real'>
       <formula>CORR(%1, %2)</formula>
       <unagg-formula>CAST(NULL AS Nullable(DOUBLE))</unagg-formula>
@@ -1078,13 +1074,6 @@
       <argument type='datetime' />
       <argument type='int' />
     </function>
-    <!--
-    <function group='operator' name='+' return-type='datetime'>
-      <formula>CASE WHEN CAST(TRUNCATE((%2 * 24 * 60 - CAST(TRUNCATE(%2 * 24 * 60,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;s&apos;, CAST(CAST(TRUNCATE((%2 * 24 * 60 - CAST(TRUNCATE(%2 * 24 * 60,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE((%2 * 24 - CAST(TRUNCATE(%2 * 24,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;mi&apos;, CAST(CAST(TRUNCATE((%2 * 24 - CAST(TRUNCATE(%2 * 24,0) AS Nullable(INTEGER))) * 60,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE((%2 - CAST(TRUNCATE(%2,0) AS Nullable(INTEGER))) * 24,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;hh&apos;, CAST(CAST(TRUNCATE((%2 - CAST(TRUNCATE(%2,0) AS Nullable(INTEGER))) * 24,0) AS Nullable(INTEGER)) AS BIGINT), CAST(CASE WHEN CAST(TRUNCATE(%2,0) AS Nullable(INTEGER)) IS NOT NULL THEN DATEADD(&apos;d&apos;, CAST(CAST(TRUNCATE(%2,0) AS Nullable(INTEGER)) AS BIGINT), CAST(%1 AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END AS Nullable(TIMESTAMP))) END</formula>
-      <argument type='date' />
-      <argument type='real' />
-    </function>
-    -->
     <function group='operator' name='+' return-type='datetime'>
       <formula>(toDateTime(%1) + %2 * 86400.0)</formula>
       <argument type='date' />
@@ -1153,13 +1142,6 @@
       <argument type='date' />
       <argument type='real' />
     </function>
-    <!--
-    <function group='operator' name='-' return-type='date'>
-      <formula>(toDateTime(%1) - TRUNC(%2 * 86400.0))</formula>
-      <argument type='date' />
-      <argument type='real' />
-    </function>
-  -->
     <function group='operator' name='-' return-type='date'>
       <formula>(%1 - %2)</formula>
       <argument type='date' />
@@ -1709,18 +1691,6 @@
       <argument type='date' />
       <argument type='localstr' />
     </date-function>
-    <!--
-    <date-function name='DATETRUNC' return-type='datetime'>
-      <formula>CAST(date_trunc('%1', %2) AS Nullable(DateTime))</formula>
-      <argument type='localstr' />
-      <argument type='datetime' />
-    </date-function>
-    <date-function name='DATETRUNC' return-type='datetime'>
-      <formula>CAST(date_trunc('%1', %2) AS Nullable(DateTime))</formula>
-      <argument type='localstr' />
-      <argument type='date' />
-    </date-function>
-    -->
     <date-function name='DATETRUNC' return-type='datetime'>
       <formula part='year'>toStartOfYear(%2)</formula>
       <formula part='quarter'>toStartOfQuarter(%2)</formula>
@@ -1781,13 +1751,13 @@
     <aggregation value='AGG_COVARP'/>
     <aggregation value='AGG_CORR'/>
     <aggregation value='AGG_SUM_XSQR'/>
-    <aggregation value='AGG_COLLECT'/>
     <aggregation value='AGG_ATTR'/>
     <aggregation value='AGG_MEDIAN'/>
     <aggregation value='AGG_PERCENTILE'/>
     <aggregation value='AGG_SKEWNESS'/>
     <aggregation value='AGG_KURTOSIS'/>
 <!--
+    <aggregation value='AGG_COLLECT'/>
     <aggregation value='AGG_QUART1'/>
     <aggregation value='AGG_QUART3'/>
     <aggregation value='AGG_INOUT'/>
@@ -1878,8 +1848,8 @@
       Specifies a formula for expressing a date literal, as well as an *ICU* date format.
       %1 is the format string and %2 is the formatted date literal.
     -->
-    <format-date-literal formula="toDate('%1')" format='yyyy-MM-dd' />
-    <format-datetime-literal formula="parseDateTimeBestEffortOrNull('%1')" format='yyyy-MM-dd HH:mm:ss' />
+    <format-date-literal formula="DATE '%1'" format='yyyy-MM-dd' />
+    <format-datetime-literal formula="TIMESTAMP '%1'" format='yyyy-MM-dd HH:mm:ss' />
     <!--
       format-is-distinct
       Defines a strategy for determining whether two values are distinct.
@@ -1889,6 +1859,12 @@
       [Default]Formula: ((lhs [!]= rhs) OR[AND] (lhs IS [NOT] NULL AND[OR] rhs IS [NOT] NULL))
     -->
     <format-is-distinct value='NoNullCheck' />
+    <!--
+      format-order-by
+      [Default]DirectionOnly: ORDER BY col ASC/DESC
+      Nulls: ORDER BY col ASC NULLS FIRST/DESC NULLS LAST
+    -->
+    <format-order-by value='Nulls' />
       <!--
       format-simple-case
       [Default]Case
