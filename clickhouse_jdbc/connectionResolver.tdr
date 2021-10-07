@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='utf-8' ?>
-
 <tdr class='clickhouse_jdbc'>
 	<connection-resolver>
     <connection-builder>
@@ -17,6 +16,8 @@
           <attr>sslmode</attr>
           <attr>vendor1</attr>
           <attr>vendor2</attr>
+          <attr>vendor3</attr>
+          <attr>vendor4</attr>
         </attribute-list>
       </required-attributes>
     </connection-normalizer>

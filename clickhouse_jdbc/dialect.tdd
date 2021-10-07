@@ -91,9 +91,8 @@
       <formula>if(%1 &gt; 0, LOG10(%1), NULL)</formula>
       <argument type='real' />
     </function>
-<!-- The LOG(%1,%2) function doesn't exist in ClickHouse, hacking to the LOG2(%1) to pass the TDVT tests -->
     <function group='numeric' name='LOG' return-type='real'>
-      <formula>CASE WHEN %1 &gt; 0 AND %2 = 2 THEN LOG2(%1) ELSE NULL END</formula>
+      <formula>if(%1 &gt; 0 AND %2 &gt; 0, LN(%1) / LN(%2), NULL)</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
@@ -216,11 +215,11 @@
       <argument type='real' />
     </function>
     <function group='numeric;logical' name='ZN' return-type='real'>
-      <formula>IFNULL(%1, 0)</formula>
+      <formula>ifNull(%1, 0)</formula>
       <argument type='real' />
     </function>
     <function group='numeric;logical' name='ZN' return-type='int'>
-      <formula>IFNULL(%1, 0)</formula>
+      <formula>ifNull(%1, 0)</formula>
       <argument type='int' />
     </function>
     <function group='string' name='ASCII' return-type='int'>
@@ -275,7 +274,7 @@
     </function>
     -->
     <function group='string' name='GET_JSON_OBJECT' return-type='str'>
-      <formula>JSON_QUERY(%2,%1)</formula>
+      <formula>JSONExtractRaw(%1,%2)</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
@@ -337,11 +336,13 @@
       <argument type='str' />
       <argument type='str' />
     </function>
+    <!--
     <function group='string' name='PARSE_URL' return-type='str'>
       <formula>PARSE_URL(%1,%2)</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
+    -->
     <function group='string' name='PARSE_URL_QUERY' return-type='str'>
       <formula>extractURLParameter(%1,%2)</formula>
       <argument type='str' />
@@ -565,47 +566,47 @@
       <argument type='date' />
     </function>
     <function group='logical' name='IFNULL' return-type='bool'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='bool' />
       <argument type='bool' />
     </function>
     <function group='logical' name='IFNULL' return-type='real'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
     <function group='logical' name='IFNULL' return-type='int'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='int' />
       <argument type='int' />
     </function>
     <function group='logical' name='IFNULL' return-type='str'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
     <function group='logical' name='IFNULL' return-type='datetime'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='datetime' />
       <argument type='datetime' />
     </function>
     <function group='logical' name='IFNULL' return-type='datetime'>
-      <formula>IFNULL(%1, toDateTime(%2))</formula>
+      <formula>ifNull(%1, toDateTime(%2))</formula>
       <argument type='datetime' />
       <argument type='date' />
     </function>
     <function group='logical' name='IFNULL' return-type='datetime'>
-      <formula>IFNULL(toDateTime(%1), %2)</formula>
+      <formula>ifNull(toDateTime(%1), %2)</formula>
       <argument type='date' />
       <argument type='datetime' />
     </function>
     <function group='logical' name='IFNULL' return-type='date'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='date' />
       <argument type='date' />
     </function>
     <function group='logical' name='IFNULL' return-type='spatial'>
-      <formula>IFNULL(%1, %2)</formula>
+      <formula>ifNull(%1, %2)</formula>
       <argument type='spatial' />
       <argument type='spatial' />
     </function>

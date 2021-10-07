@@ -19,9 +19,25 @@
         props["connection_timeout"] = attr[connectionHelper.attributeVendor1];
     }
 
+    // setting Data Transfer Timeout default value (in milliseconds)
+    props["dataTransferTimeout"] = 10000;
+
+    // setting Data Transfer Timeout value (in milliseconds) specified by user
+    if(attr[connectionHelper.attributeVendor2] && attr[connectionHelper.attributeVendor2].length > 0){ 
+        props["dataTransferTimeout"] = attr[connectionHelper.attributeVendor2];
+    }
+
+    // setting Connection Timeout default value (in milliseconds)
+    props["socket_timeout"] = 30000;
+
+    // setting Connection Timeout value (in milliseconds) specified by user
+    if(attr[connectionHelper.attributeVendor3] && attr[connectionHelper.attributeVendor3].length > 0){ 
+        props["socket_timeout"] = attr[connectionHelper.attributeVendor3];
+    }
+
     // setting custom attributes
-    if(attr[connectionHelper.attributeVendor2] && attr[connectionHelper.attributeVendor2].length > 0){
-        var customParams = attr[connectionHelper.attributeVendor2].split(';');
+    if(attr[connectionHelper.attributeVendor4] && attr[connectionHelper.attributeVendor4].length > 0){
+        var customParams = attr[connectionHelper.attributeVendor4].split(';');
         for(var i = 0; i < customParams.length; i++){
           var param = customParams[i].split('=');
           props[param[0]] = param[1];
