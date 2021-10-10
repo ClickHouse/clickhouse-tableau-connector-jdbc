@@ -37,7 +37,7 @@
 
     // setting custom attributes
     if(attr[connectionHelper.attributeVendor4] && attr[connectionHelper.attributeVendor4].length > 0){
-        var customParams = attr[connectionHelper.attributeVendor4].split(';');
+        var customParams = attr[connectionHelper.attributeV-vendor4].split(';');
         for(var i = 0; i < customParams.length; i++){
           var param = customParams[i].split('=');
           props[param[0]] = param[1];
