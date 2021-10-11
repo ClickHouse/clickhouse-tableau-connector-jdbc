@@ -22,10 +22,10 @@
         props["dataTransferTimeout"] = attr[connectionHelper.attributeVendor1];
     }
 
-    // setting Connection Timeout default value (in milliseconds)
+    // setting Socket Timeout default value (in milliseconds)
     props["socket_timeout"] = 30000;
 
-    // setting Connection Timeout value (in milliseconds) specified by user
+    // setting Socket Timeout value (in milliseconds) specified by user
     if(attr[connectionHelper.attributeVendor2] && attr[connectionHelper.attributeVendor2].length > 0){ 
         props["socket_timeout"] = attr[connectionHelper.attributeVendor2];
     }
