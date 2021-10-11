@@ -13,10 +13,9 @@
       <true-value value='require' />
     </boolean-options>
   </field>
-  <field name='vendor1' label='Connection Timeout (in milliseconds)' category='advanced' value-type='string' optional='true' default-value='10000' />
-  <field name='vendor2' label='Data Transfer Timeout (in milliseconds)' category='advanced' value-type='string' optional='true' default-value='10000' />
-  <field name='vendor3' label='Socket Timeout (in milliseconds)' category='advanced' value-type='string' optional='true' default-value='30000' />
-  <field name='vendor4' label='Custom Parameters (input as Key1=Value1;Key2=Value2)' category='advanced' value-type='string' optional='true'>
+  <field name='vendor1' label='Data Transfer Timeout (in milliseconds)' category='advanced' value-type='string' optional='true' default-value='10000' />
+  <field name='vendor2' label='Socket Timeout (in milliseconds)' category='advanced' value-type='string' optional='true' default-value='30000' />
+  <field name='vendor3' label='Custom Parameters (input as Key1=Value1;Key2=Value2)' category='advanced' value-type='string' optional='true'>
     <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@]+;)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@]+))?)$'/>
   </field>
 </connection-fields>
