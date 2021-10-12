@@ -3,12 +3,12 @@
 
 ### What's it?
 
-An extension for Tableau Desktop / Tableau Server that simplifies the process of connecting Tableau to ClickHouse and extends support for standard Tableau functionality when working with ClickHouse (as compared to Generic  ODBC/JDBC)
+An extension for Tableau Desktop / Tableau Server that simplifies the process of connecting Tableau to ClickHouse and extends support for standard Tableau functionality when working with ClickHouse (as compared to Generic ODBC/JDBC)
 
 ### What is the profit?
 
 - In comparison with **Other Databases (ODBC)**: This connector uses a JDBC driver, which is faster than the ODBC driver in some cases (for example, creating Extracts), and is also much easier to install than ODBC (a cross-platform jar file, does not require compilation for individual platforms).
-- In comparison with **Other Databases (JDBC)**: This connector has fine-tuning SQL queries to implement most of the standard Tableau functionality (including multiple JOINS in the data source, Sets, etc.) and has a friendly connection setup window ;)
+- In comparison with **Other Databases (JDBC)**: This connector has fine-tuning SQL queries to implement most of the standard Tableau functionality (including multiple JOINS in the data source, Sets, etc.) and has a friendly connection dialog ;)
 
 ### Future plans
 - Signing of the connector (.taco) with a Code Signing certificate to simplify the installation and use process
