@@ -1,5 +1,5 @@
 ![](https://analytikaplus.ru/other-media/clickhouse-jdbc-header.png)
-# Tableau connector to ClickHouse using JDBC driver by [ANALYTIKA PLUS](https://analytikaplus.ru)
+# Tableau connector to ClickHouse using JDBC driver by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)
 
 
 ## What's it?
