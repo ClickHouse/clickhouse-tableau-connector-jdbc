@@ -77,3 +77,16 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     tsm pending-changes apply
     ```
     - Note that whenever you add, remove, or update a connector, you need to restart the server to see the changes.
+## Connection tips
+### Initial SQL tab
+**IMPORTANT**: to get the In/Out Sets working properly (as both a Dimension and a Filter) one have to add the following clause into the Initial SQL Section: 
+
+```
+SET join_use_nulls=1;
+```
+
+The above setting could be set either at the level of CH instance (in the `config.xml`) or as a session parameter, the Initial SQL is the place to put it for the latter.
+
+**CAVEAT**: if the session ends, the In/Out Set would get the wrong result (all the Marks on a view would belong to the IN part). If this happened, simply Refreshing the view could do it right again.
+### Advanced tab
+You can configure connection parameters in the *Custom Parameters* field, the list of available parameters can be found in the file [ClickHouseConnectionSettings.java](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-jdbc/src/main/java/ru/yandex/clickhouse/settings/ClickHouseConnectionSettings.java)

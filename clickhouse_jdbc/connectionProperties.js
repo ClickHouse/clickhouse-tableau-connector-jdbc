@@ -11,15 +11,15 @@
     // setting Tableau to use ClickHouse server timezone for dates
     props["use_server_time_zone_for_dates"] = 1;
 
-    // setting Connection Timeout default value (in milliseconds)
-    props["connection_timeout"] = 10000;
-
     // setting Data Transfer Timeout default value (in milliseconds)
     props["dataTransferTimeout"] = 10000;
 
-    // setting Data Transfer Timeout value (in milliseconds) specified by user
+    // setting Connection Timeout default value (in milliseconds)
+    props["connection_timeout"] = 10000;
+
+    // setting Connection Timeout value (in milliseconds) specified by user
     if(attr[connectionHelper.attributeVendor1] && attr[connectionHelper.attributeVendor1].length > 0){ 
-        props["dataTransferTimeout"] = attr[connectionHelper.attributeVendor1];
+        props["connection_timeout"] = attr[connectionHelper.attributeVendor1];
     }
 
     // setting Socket Timeout default value (in milliseconds)

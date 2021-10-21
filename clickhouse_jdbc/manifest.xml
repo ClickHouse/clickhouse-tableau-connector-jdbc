@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.0.8' name='ClickHouse (JDBC)' version='18.1' min-version-tableau='2020.4'>
+<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.1.1' name='ClickHouse (JDBC)' version='18.1' min-version-tableau='2020.4'>
   <vendor-information>
-      <company name='Analytika Plus'/>
+      <company name='ANALYTIKA PLUS'/>
       <support-link url='https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues'/>
       <driver-download-link url='https://github.com/ClickHouse/clickhouse-jdbc/releases'/>
   </vendor-information>
