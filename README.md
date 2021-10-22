@@ -27,7 +27,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - macOS: `~/Documents/My Tableau Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Repository\Connectors`
 3. Run Tableau Desktop
-4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse (JDBC) by Analytika Plus**
+4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse (JDBC) by ANALYTIKA PLUS**
 
 ## How to install (Tableau Prep Builder)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
@@ -38,7 +38,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - macOS: `~/Documents/My Tableau Prep Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Prep Repository\Connectors`
 3. Run Tableau Prep Builder
-4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse (JDBC) by Analytika Plus**
+4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse (JDBC) by ANALYTIKA PLUS**
 
 ## How to install (Tableau Server)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
@@ -78,6 +78,8 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     ```
     - Note that whenever you add, remove, or update a connector, you need to restart the server to see the changes.
 ## Connection tips
+### General tab
+If you want to connect to ClickHouse in Yandex.Cloud, then you need to specify *"default"* in the Database field to correctly display the list of databases in the Data source creation window. See the details in [Issue #9 (in Russian)](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues/9).
 ### Initial SQL tab
 **IMPORTANT**: to get the In/Out Sets working properly (as both a Dimension and a Filter) one have to add the following clause into the Initial SQL Section: 
 
