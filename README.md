@@ -78,8 +78,6 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     ```
     - Note that whenever you add, remove, or update a connector, you need to restart the server to see the changes.
 ## Connection tips
-### General tab
-If you want to connect to ClickHouse in Yandex.Cloud, then you need to specify *"default"* in the Database field to correctly display the list of databases in the Data source creation window. See the details in [Issue #9 (in Russian)](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues/9).
 ### Initial SQL tab
 **IMPORTANT**: to get the In/Out Sets working properly (as both a Dimension and a Filter) one have to add the following clause into the Initial SQL Section: 
 
