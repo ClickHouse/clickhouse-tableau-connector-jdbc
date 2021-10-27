@@ -45,7 +45,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
-    - *For Linux:* make shure directory is readable by the "tableau" user. To do this:
+    - *For Linux:* make sure directory is readable by the "tableau" user. To do this:
         - Create the directory:
             ```
             sudo mkdir -p /opt/tableau/tableau_driver/jdbc
