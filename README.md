@@ -45,7 +45,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
-    - *For Linux:* make shure directory is readable by the "tableau" user. To do this:
+    - *For Linux:* make sure directory is readable by the "tableau" user. To do this:
         - Create the directory:
             ```
             sudo mkdir -p /opt/tableau/tableau_driver/jdbc
@@ -78,8 +78,6 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     ```
     - Note that whenever you add, remove, or update a connector, you need to restart the server to see the changes.
 ## Connection tips
-### General tab
-If you want to connect to ClickHouse in Yandex.Cloud, then you need to specify *"default"* in the Database field to correctly display the list of databases in the Data source creation window. See the details in [Issue #9 (in Russian)](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues/9).
 ### Initial SQL tab
 **IMPORTANT**: to get the In/Out Sets working properly (as both a Dimension and a Filter) one have to add the following clause into the Initial SQL Section: 
 
