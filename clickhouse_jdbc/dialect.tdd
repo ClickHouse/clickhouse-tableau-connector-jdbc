@@ -835,11 +835,21 @@
       <argument type='date' />
     </function>
     <function group='aggregate' name='MEDIAN' return-type='real'>
-      <formula>quantileExact(0.5)(%1)</formula>
+      <formula>quantile(0.5)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='MEDIAN' return-type='int'>
+      <formula>quantile(0.5)(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='MEDIAN_EXACT' return-type='real'>
+      <formula>quantileExact(0.5)(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='MEDIAN_EXACT' return-type='int'>
       <formula>quantileExact(0.5)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
@@ -895,12 +905,24 @@
       <argument type='int' />
     </function>
     <function group='aggregate' name='PERCENTILE' return-type='real'>
-      <formula>quantileExact(%2)(%1)</formula>
+      <formula>quantile(%2)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
       <argument type='localreal' />
     </function>
     <function group='aggregate' name='PERCENTILE' return-type='real'>
+      <formula>quantile(%2)(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+      <argument type='localreal' />
+    </function>
+    <function group='aggregate' name='PERCENTILE_EXACT' return-type='real'>
+      <formula>quantileExact(%2)(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+      <argument type='localreal' />
+    </function>
+    <function group='aggregate' name='PERCENTILE_EXACT' return-type='real'>
       <formula>quantileExact(%2)(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
