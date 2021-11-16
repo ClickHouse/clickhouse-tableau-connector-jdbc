@@ -90,3 +90,6 @@ The above setting could be set either at the level of CH instance (in the `confi
 **CAVEAT**: if the session ends, the In/Out Set would get the wrong result (all the Marks on a view would belong to the IN part). If this happened, simply Refreshing the view could do it right again.
 ### Advanced tab
 You can configure connection parameters in the *Custom Parameters* field, the list of available parameters can be found in the file [ClickHouseConnectionSettings.java](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-jdbc/src/main/java/ru/yandex/clickhouse/settings/ClickHouseConnectionSettings.java)
+- Additional custom parameters:
+    - database=[your_db_name] *(default: "default")*
+    - set_session_id=false *(default: "true")*
