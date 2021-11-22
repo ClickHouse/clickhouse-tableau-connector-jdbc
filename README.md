@@ -27,7 +27,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - macOS: `~/Documents/My Tableau Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Repository\Connectors`
 3. Run Tableau Desktop
-4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse (JDBC) by ANALYTIKA PLUS**
+4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Prep Builder)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
@@ -38,7 +38,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
     - macOS: `~/Documents/My Tableau Prep Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Prep Repository\Connectors`
 3. Run Tableau Prep Builder
-4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse (JDBC) by ANALYTIKA PLUS**
+4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Server)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
