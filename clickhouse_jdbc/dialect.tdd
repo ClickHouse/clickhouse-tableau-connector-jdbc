@@ -3,17 +3,6 @@
          class='clickhouse_jdbc'
          version='18.1'>
     <function-map>
-    <!--
-    <function group='system' name='TIME1899' return-type='datetime'>
-      <formula>(CAST('1899-12-30' AS DATE) + %1)</formula>
-      <argument type='datetime' />
-    </function>
-    <function group='system' name='SYS_NUMBIN' return-type='int'>
-      <formula>floor((%1 / %2),0)</formula>
-      <argument type='real' />
-      <argument type='real' />
-    </function>
-    -->
     <function group='numeric' name='ABS' return-type='real'>
       <formula>ABS(%1)</formula>
       <argument type='real' />
