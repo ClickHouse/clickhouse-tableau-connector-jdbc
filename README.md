@@ -16,7 +16,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 
 ## Before you install
 
-- Make sure you use Tableau **2020.3+**
+- Make sure you use Tableau **2020.3+ and not 2021.3.4** (there is a taco signature verification error in this version of Desktop)
 
 ## How to install (Tableau Desktop)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
