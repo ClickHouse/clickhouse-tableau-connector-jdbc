@@ -25,6 +25,7 @@
       <customization name='CAP_QUERY_GROUP_BY_DEGREE' value='no'/>
       <customization name='CAP_QUERY_HAVING_REQUIRES_GROUP_BY' value='yes'/>
       <customization name='CAP_QUERY_INCLUDE_GROUP_BY_COLUMNS_IN_SELECT' value='yes'/>
+      <customization name='CAP_QUERY_INITIAL_SQL_SPLIT_STATEMENTS' value='yes'/>
       <customization name='CAP_QUERY_INOUT_JOINS' value='yes'/>
       <customization name='CAP_QUERY_JOIN_ACROSS_SCHEMAS' value='yes'/>
       <customization name='CAP_QUERY_JOIN_PUSH_DOWN_CONDITION_EXPRESSIONS' value='yes'/>
@@ -47,7 +48,6 @@
       <!--Union-->
       <customization name='CAP_SUPPORTS_UNION' value='yes'/>
     </customizations>
-
   </connection-customization>
   <connection-fields file='connection-fields.xml'/>
   <connection-metadata file='connection-metadata.xml'/> 
