@@ -1892,6 +1892,23 @@
       Nulls: ORDER BY col ASC NULLS FIRST/DESC NULLS LAST
     -->
     <format-order-by value='Nulls' />
+    <!--
+      format-select
+      Piece-by-piece formula for defining a SELECT statement
+    -->
+    <format-select>
+      <part name='Top' value='SELECT * FROM (' />
+      <part name='TopSampleRecords' value='SELECT toString(rand64()) AS rnd_id, * FROM (' />
+      <part name='Select' value='SELECT %1' />
+      <part name='From' value='FROM %1' />
+      <part name='Where' value='WHERE %1' />
+      <part name='Group' value='GROUP BY %1' />
+      <part name='Having' value='HAVING %1' />
+      <part name='OrderBy' value='ORDER BY %1' />
+      <part name='TopSampleRecords' value=') ORDER BY rnd_id' />
+      <part name='TopSampleRecords' value='LIMIT %1' />
+      <part name='Top' value=') LIMIT %1' />
+    </format-select>
       <!--
       format-simple-case
       [Default]Case

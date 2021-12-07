@@ -8,11 +8,10 @@
   <connection-customization class='clickhouse_jdbc' enabled='true' version='10.0'>
     <vendor name='vendor'/>
     <driver name='driver'/>
-
      <customizations>
-      <!--Initial SQL-->
       <customization name='CAP_SUPPORTS_INITIAL_SQL' value='yes'/>
       <!--JDBC-->
+      <customization name='CAP_JDBC_BIND_BIGDECIMAL_STRING' value='yes' />
       <customization name='CAP_JDBC_QUERY_ASYNC' value='no'/>
       <customization name='CAP_JDBC_QUERY_CANCEL' value='yes'/>
       <!--Metadata-->
@@ -38,6 +37,7 @@
       <customization name='CAP_QUERY_SUBQUERIES_WITH_TOP' value='yes'/>
       <customization name='CAP_QUERY_SUPPORTS_UNIQUE_IDENTIFIER' value='yes'/>
       <customization name='CAP_QUERY_TOP_N' value='yes'/>
+      <customization name='CAP_QUERY_TOP_SAMPLE' value='yes'/>
       <!--String Splits-->
       <customization name='CAP_SUPPORTS_SPLIT_FROM_LEFT' value='yes'/>
       <customization name='CAP_SUPPORTS_SPLIT_FROM_RIGHT' value='yes'/>
