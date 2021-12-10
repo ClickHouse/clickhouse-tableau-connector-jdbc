@@ -9,15 +9,15 @@
     <vendor name='vendor'/>
     <driver name='driver'/>
      <customizations>
+      <!-- Initial SQL -->
       <customization name='CAP_SUPPORTS_INITIAL_SQL' value='yes'/>
-      <!--JDBC-->
+      <!-- JDBC -->
       <customization name='CAP_JDBC_BIND_BIGDECIMAL_STRING' value='yes' />
-      <customization name='CAP_JDBC_QUERY_ASYNC' value='no'/>
+      <customization name='CAP_JDBC_QUERY_ASYNC' value='yes'/>
       <customization name='CAP_JDBC_QUERY_CANCEL' value='yes'/>
-      <!--Metadata-->
-      <customization name='CAP_QUERY_TOP_0_METADATA' value='yes'/>
+      <!-- Metadata -->
       <customization name='CAP_QUERY_WHERE_FALSE_METADATA' value='yes'/>
-      <!--Query-->
+      <!-- Query -->
       <customization name='CAP_QUERY_BOOL_IDENTIFIER_TO_LOGICAL' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_ALIAS' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_BOOL' value='yes'/>
@@ -38,14 +38,14 @@
       <customization name='CAP_QUERY_SUPPORTS_UNIQUE_IDENTIFIER' value='yes'/>
       <customization name='CAP_QUERY_TOP_N' value='yes'/>
       <customization name='CAP_QUERY_TOP_SAMPLE' value='yes'/>
-      <!--String Splits-->
+      <!-- String Splits -->
       <customization name='CAP_SUPPORTS_SPLIT_FROM_LEFT' value='yes'/>
       <customization name='CAP_SUPPORTS_SPLIT_FROM_RIGHT' value='yes'/>
-      <!--Temporary Tables-->
+      <!-- Temporary Tables -->
       <customization name='CAP_CREATE_TEMP_TABLES' value='no'/>
       <customization name='CAP_SELECT_INTO' value='no'/>
       <customization name='CAP_SELECT_TOP_INTO' value='no'/>
-      <!--Union-->
+      <!-- Union -->
       <customization name='CAP_SUPPORTS_UNION' value='yes'/>
     </customizations>
   </connection-customization>

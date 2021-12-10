@@ -8,10 +8,7 @@
     // setting Tableau to use ClickHouse server timezone for dates
     props["use_server_time_zone_for_dates"] = 1;
 
-    // setting Data Transfer Timeout default value (in milliseconds)
-    props["dataTransferTimeout"] = 10000;
-
-    // setting Connection Timeout default value (in milliseconds)
+        // setting Connection Timeout default value (in milliseconds)
     props["connection_timeout"] = 10000;
 
     // setting Connection Timeout value (in milliseconds) specified by user
@@ -20,7 +17,7 @@
     }
 
     // setting Socket Timeout default value (in milliseconds)
-    props["socket_timeout"] = 30000;
+    props["socket_timeout"] = 300000;
 
     // setting Socket Timeout value (in milliseconds) specified by user
     if(attr[connectionHelper.attributeVendor2] && attr[connectionHelper.attributeVendor2].length > 0){ 
@@ -29,7 +26,7 @@
 
     //setting default connection parameters
     var parameters = {}
-    parameters["set_session_id"] = "true"
+    parameters["set_session_id"] = 0
 
     // setting custom attributes
     if(attr[connectionHelper.attributeVendor3] && attr[connectionHelper.attributeVendor3].length > 0){
@@ -45,7 +42,7 @@
     }
 
     // setting Session ID (prefix + pseudo-random number) 
-    if(parameters["set_session_id"] == "true"){
+    if(parameters["set_session_id"] == 1){
         props["session_id"] = "tableau-jdbc-connector-" + Math.floor(Math.random() * (Math.floor(10000000) - Math.ceil(1) + 1)) + Math.ceil(1);
     }
 
