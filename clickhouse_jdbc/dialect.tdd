@@ -235,7 +235,7 @@
       <argument type='int' />
     </function>
     <function group='string' name='CONTAINS' return-type='bool'>
-      <formula>POSITION(%1, %2) > 0</formula>
+      <formula>POSITION(%1, %2) &gt; 0</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
@@ -340,13 +340,6 @@
       <argument type='str' />
       <argument type='str' />
     </function>
-    <!--
-    <function group='string' name='PARSE_URL' return-type='str'>
-      <formula>PARSE_URL(%1,%2)</formula>
-      <argument type='str' />
-      <argument type='str' />
-    </function>
-    -->
     <function group='string' name='PARSE_URL_QUERY' return-type='str'>
       <formula>extractURLParameter(%1,%2)</formula>
       <argument type='str' />
@@ -536,7 +529,7 @@
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKETIME' return-type='datetime'>
-      <formula>toTime(addSeconds(addMinutes(addHours(DATE '1970-01-01', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER))))</formula>
+      <formula>toTime(addSeconds(addMinutes(addHours(DATE '1970-01-02', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER))))</formula>
       <argument type='int' />
       <argument type='int' />
       <argument type='int' />
@@ -728,13 +721,6 @@
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
-    <!--
-    <function group='aggregate' name='COLLECT' return-type='spatial'>
-      <formula>geography::CollectionAggregate(%1)</formula>
-      <unagg-formula>%1</unagg-formula>
-      <argument type='spatial' />
-    </function>
-  -->
     <function group='aggregate' name='CORR' return-type='real'>
       <formula>CORR(%1, %2)</formula>
       <unagg-formula>CAST(NULL AS Nullable(DOUBLE))</unagg-formula>
@@ -1155,27 +1141,27 @@
       <argument type='date' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>(%1 - %2 * 86400.0)</formula>
+      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
       <argument type='datetime' />
       <argument type='real' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>subtractDays(%1,%2)</formula>
+      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
       <argument type='datetime' />
       <argument type='int' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>(toDateTime(%1) - %2 * 86400.0)</formula>
+      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
     <function group='operator' name='-' return-type='date'>
-      <formula>(%1 - %2)</formula>
+      <formula>toDate(DATE_ADD(SECOND, - %2 * 86400, %1))</formula>
       <argument type='date' />
       <argument type='int' />
     </function>
     <function group='operator' name='/' return-type='real'>
-      <formula>(%1 / NULLIF(%2,0))</formula>
+      <formula>(toFloat64(%1) / NULLIF(%2,0))</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
