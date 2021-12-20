@@ -85,11 +85,11 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 SET join_use_nulls=1;
 ```
 
-The above setting could be set either at the level of CH instance (in the `config.xml`) or as a session parameter, the Initial SQL is the place to put it for the latter.
+The above setting could be set either at the level of CH instance (in the `config.xml` to be applied instance-wide, or in the `users.xml` under the particular **Profile** to be enabled for the specified user) or as an http session parameter, the Initial SQL is the place to put it for the latter.
 
 **CAVEAT**: if the session ends, the In/Out Set would get the wrong result (all the Marks on a view would belong to the IN part). If this happened, simply Refreshing the view could do it right again.
 ### Advanced tab
 You can configure connection parameters in the *Custom Parameters* field, the list of available parameters can be found in the file [ClickHouseConnectionSettings.java](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-jdbc/src/main/java/ru/yandex/clickhouse/settings/ClickHouseConnectionSettings.java)
 - Additional custom parameters:
+    - set_session_id=1 *(default: "0")*
     - database=[your_db_name] *(default: "default")*
-    - set_session_id=0 *(default: "1")*
