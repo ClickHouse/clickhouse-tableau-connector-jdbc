@@ -16,7 +16,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 
 ## Before you install
 
-- Make sure you use Tableau **2020.3+ and not 2021.3.4** (there is a taco signature verification error in this version of Desktop)
+- Make sure you use Tableau **2020.3+
 
 ## How to install (Tableau Desktop)
 1. Download the latest [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.1 and higher required) and place the `clickhouse-jdbc-***-shaded.jar` to:
@@ -92,4 +92,4 @@ The above setting could be set either at the level of CH instance (in the `confi
 You can configure connection parameters in the *Custom Parameters* field, the list of available parameters can be found in the file [ClickHouseConnectionSettings.java](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-jdbc/src/main/java/ru/yandex/clickhouse/settings/ClickHouseConnectionSettings.java)
 - Additional custom parameters:
     - database=[your_db_name] *(default: "default")*
-    - set_session_id=false *(default: "true")*
+    - set_session_id=0 *(default: "1")*
