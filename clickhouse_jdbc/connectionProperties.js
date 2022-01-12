@@ -8,50 +8,31 @@
     // setting Tableau to use ClickHouse server timezone for dates
     props["use_server_time_zone_for_dates"] = 1;
 
-        // setting Connection Timeout default value (in milliseconds)
-    props["connection_timeout"] = 10000;
-
-    // setting Connection Timeout value (in milliseconds) specified by user
-    if(attr[connectionHelper.attributeVendor1] && attr[connectionHelper.attributeVendor1].length > 0){ 
-        props["connection_timeout"] = attr[connectionHelper.attributeVendor1];
-    }
-
     // setting Socket Timeout default value (in milliseconds)
     props["socket_timeout"] = 300000;
 
     // setting Socket Timeout value (in milliseconds) specified by user
-    if(attr[connectionHelper.attributeVendor2] && attr[connectionHelper.attributeVendor2].length > 0){ 
-        props["socket_timeout"] = attr[connectionHelper.attributeVendor2];
+    if(attr["v-socket-timeout"] && attr["v-socket-timeout"].length > 0){ 
+        props["socket_timeout"] = attr["v-socket-timeout"];
     }
 
-    //setting default connection parameters
-    var parameters = {}
-    parameters["set_session_id"] = 0
-
     // setting custom attributes
-    if(attr[connectionHelper.attributeVendor3] && attr[connectionHelper.attributeVendor3].length > 0){
-        var customParams = attr[connectionHelper.attributeVendor3].split(';');
+    if(attr["v-custom-parameters"] && attr["v-custom-parameters"].length > 0){
+        var customParams = attr["v-custom-parameters"].split(';');
         for(var i = 0; i < customParams.length; i++){
             var param = customParams[i].split('=');
-            if(param[0] = "set_session_id"){
-                parameters["set_session_id"] = param[1]
-            } else {
+            if(param[0] != "set_session_id"){
                 props[param[0]] = param[1];
             }
         }
     }
 
-    // setting Session ID (prefix + pseudo-random number) 
-    if(parameters["set_session_id"] == 1){
-        props["session_id"] = "tableau-jdbc-connector-" + Math.floor(Math.random() * (Math.floor(10000000) - Math.ceil(1) + 1)) + Math.ceil(1);
-    }
-
-    props["user"] = attr[connectionHelper.attributeUsername];
-    props["password"] = attr[connectionHelper.attributePassword];
+    props["user"] = attr["username"];
+    props["password"] = attr["password"];
    
-    if (attr[connectionHelper.attributeSSLMode] == "require") {
+    if (attr["sslmode"] == "require") {
         props["ssl"] = "true";
-        props["sslmode"] = "strict";
+        props["sslmode"] = "STRICT";
     }
 
     return props;
