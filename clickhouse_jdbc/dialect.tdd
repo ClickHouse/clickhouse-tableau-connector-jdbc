@@ -178,13 +178,13 @@
       <argument type='real' />
     </function>
     <function group='numeric' name='ROUND' return-type='real'>
-      <formula>CAST(ROUND(%1, 0) AS Nullable(REAL))</formula>
+      <formula>ROUND(%1, 0)</formula>
       <argument type='real' />
     </function>
     <function group='numeric' name='ROUND' return-type='real'>
-      <formula>CAST(ROUND(%1, %2) AS Nullable(REAL))</formula>
+      <formula>ROUND(%1, %2)</formula>
       <argument type='real' />
-      <argument type='real' />
+      <argument type='int' />
     </function>
     <function group='numeric' name='SIGN' return-type='int'>
       <formula>SIGN(%1)</formula>
@@ -420,11 +420,11 @@
       <argument type='str' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
-      <formula>toDate(%1 * 86400.0)</formula>
+      <formula>toDate(%1 - 25567)</formula>
       <argument type='real' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
-      <formula>toDate(%1)</formula>
+      <formula>toDate(%1 - 25567)</formula>
       <argument type='int' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
@@ -432,7 +432,7 @@
       <argument type='str' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
-      <formula>toDate(%1)</formula>
+      <formula>CAST(%1 AS Nullable(DATE))</formula>
       <argument type='datetime' />
     </function>
     <function group='cast' name='DATE' return-type='date'>
@@ -440,11 +440,11 @@
       <argument type='date' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
-      <formula>toDateTime(%1)</formula>
+      <formula>toDateTime((%1 - 25567) * 86400.0)</formula>
       <argument type='real' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
-      <formula>toDateTime(%1)</formula>
+      <formula>toDateTime((%1 - 25567) * 86400.0)</formula>
       <argument type='int' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
@@ -452,7 +452,7 @@
       <argument type='str' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
-      <formula>%1</formula>
+      <formula>CAST(%1 AS Nullable(TIMESTAMP))</formula>
       <argument type='datetime' />
     </function>
     <function group='cast' name='DATETIME' return-type='datetime'>
@@ -476,23 +476,23 @@
       <argument type='str' />
     </function>
     <function group='cast' name='FLOAT' return-type='real'>
-      <formula>(toDate(%1) - DATE '1970-01-01' + 25567)</formula>
+      <formula>(toUnixTimestamp(%1) / 86400.0 + 25567.0)</formula>
       <argument type='datetime' />
     </function>
     <function group='cast' name='FLOAT' return-type='real'>
-      <formula>(toDate(%1) - DATE '1970-01-01' + 25567)</formula>
+      <formula>(toUnixTimestamp(toDateTime(%1)) / 86400.0 + 25567.0)</formula>
       <argument type='date' />
     </function>
     <function group='cast' name='INT' return-type='int'>
-      <formula>CAST(%1 AS Nullable(UInt64))</formula>
+      <formula>CAST(%1 AS Nullable(UInt8))</formula>
       <argument type='bool' />
     </function>
     <function group='cast' name='INT' return-type='int'>
-      <formula>CAST(TRUNC(%1) AS Nullable(BIGINT))</formula>
+      <formula>CAST(TRUNC(%1) AS Nullable(INTEGER))</formula>
       <argument type='real' />
     </function>
     <function group='cast' name='INT' return-type='int'>
-      <formula>%1</formula>
+      <formula>CAST(%1 AS Nullable(INTEGER))</formula>
       <argument type='int' />
     </function>
     <function group='cast' name='INT' return-type='int'>
@@ -500,11 +500,11 @@
       <argument type='str' />
     </function>
     <function group='cast' name='INT' return-type='int'>
-      <formula>(TO_DAYS(%1) - 693961)</formula>
+      <formula>CAST(CAST(%1 AS Nullable(Date)) AS Nullable(INTEGER)) + 25567</formula>
       <argument type='datetime' />
     </function>
     <function group='cast' name='INT' return-type='int'>
-      <formula>toUInt64(%1) + 25567</formula>
+      <formula>CAST(%1 AS Nullable(INTEGER)) + 25567</formula>
       <argument type='date' />
     </function>
     <function group='cast' name='MAKEDATE' return-type='date'>
@@ -774,6 +774,36 @@
     </function>
     <function group='aggregate' name='COUNTD' return-type='int'>
       <formula>COUNT(DISTINCT %1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='date' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='str' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='datetime' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
+      <formula>uniq(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='date' />
     </function>
@@ -1660,7 +1690,7 @@
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEPARSE' return-type='datetime'>
-      <formula>parseDateTimeBestEffortOrNull(%2, %1))</formula>
+      <formula>parseDateTimeBestEffortOrNull(%2)</formula>
       <argument type='localstr' />
       <argument type='str' />
     </date-function>
