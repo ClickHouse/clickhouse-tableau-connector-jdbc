@@ -14,8 +14,11 @@
           <attr>username</attr>
           <attr>password</attr>
           <attr>sslmode</attr>
-          <attr>v-socket-timeout</attr>
-          <attr>v-custom-parameters</attr>
+          <attr>v-custom-connection-params</attr>
+          <attr>v-custom-http-params</attr>
+          <attr>v-custom-type-mappings</attr>
+          <attr>v-custom-url-params</attr>
+          <attr>v-set-session-id</attr>
         </attribute-list>
       </required-attributes>
     </connection-normalizer>
