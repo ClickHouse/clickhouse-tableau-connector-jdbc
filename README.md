@@ -18,7 +18,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 
 - Make sure you...
   - use Tableau **2020.3+**
-  - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release]())
+  - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases/tag/v0.1.4))
 
 ## How to install (Tableau Desktop)
 1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch1 required) and place the `clickhouse-jdbc-0.3.2-patch1-shaded.jar` to:
