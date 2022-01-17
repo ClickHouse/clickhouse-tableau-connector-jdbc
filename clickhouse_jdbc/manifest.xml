@@ -38,6 +38,7 @@
       <customization name='CAP_QUERY_SUPPORTS_UNIQUE_IDENTIFIER' value='yes'/>
       <customization name='CAP_QUERY_TOP_N' value='yes'/>
       <customization name='CAP_QUERY_TOP_SAMPLE' value='yes'/>
+      <customization name='CAP_QUERY_TOP_SAMPLE_PERCENT' value='yes'/>
       <!-- String Splits -->
       <customization name='CAP_SUPPORTS_SPLIT_FROM_LEFT' value='yes'/>
       <customization name='CAP_SUPPORTS_SPLIT_FROM_RIGHT' value='yes'/>
