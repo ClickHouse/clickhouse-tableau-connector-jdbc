@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.2.0' name='ClickHouse JDBC' version='18.1' min-version-tableau='2020.3'>
+<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.2.1' name='ClickHouse JDBC' version='18.1' min-version-tableau='2020.3'>
   <vendor-information>
       <company name='ANALYTIKA PLUS'/>
       <support-link url='https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/issues'/>
@@ -18,7 +18,6 @@
       <customization name='CAP_QUERY_WHERE_FALSE_METADATA' value='no'/>
       <!-- Query -->
       <customization name='CAP_QUERY_BOOL_IDENTIFIER_TO_LOGICAL' value='yes'/>
-      <customization name='CAP_QUERY_BOOLEXPR_TO_INTEXPR' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_ALIAS' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_BOOL' value='yes'/>
       <customization name='CAP_QUERY_GROUP_BY_DEGREE' value='no'/>
