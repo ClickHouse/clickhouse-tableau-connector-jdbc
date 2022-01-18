@@ -21,7 +21,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
   - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases/tag/v0.1.4))
 
 ## How to install (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch1 required) and place the `clickhouse-jdbc-0.3.2-patch1-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch2 required) and place the `clickhouse-jdbc-0.3.2-patch2-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -32,7 +32,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Prep Builder)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch1 required) and place the `clickhouse-jdbc-0.3.2-patch1-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch2 required) and place the `clickhouse-jdbc-0.3.2-patch2-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -43,7 +43,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Server)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch1 required) and place the `clickhouse-jdbc-0.3.2-patch1-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch2 required) and place the `clickhouse-jdbc-0.3.2-patch2-shaded.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
@@ -87,7 +87,7 @@ SET my_setting=value;
 ``` 
 ### Advanced tab
 In 99% of cases you don't need the Advanced tab, for the remaining 1% you can use the following settings:
-- **Custom Connection Parameters**. By default, socket_timeout is already specified, this parameter may need to be changed if some extracts are updated for a very long time. The value of this parameter is specified in milliseconds. The rest of the parameters can be found [here](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-client/src/main/java/com/clickhouse/client/config/ClickHouseClientOption.java), add them in this field separated by commas
+- **Custom Connection Parameters**. By default, `socket_timeout` is already specified, this parameter may need to be changed if some extracts are updated for a very long time. The value of this parameter is specified in milliseconds. The rest of the parameters can be found [here](https://github.com/ClickHouse/clickhouse-jdbc/blob/master/clickhouse-client/src/main/java/com/clickhouse/client/config/ClickHouseClientOption.java), add them in this field separated by commas
 - **JDBC Driver custom_http_params**. This field allows you to drop some parameters into the ClickHouse connection string by passing values to the [`custom_http_params` parameter of the driver](https://github.com/ClickHouse/clickhouse-jdbc#configuration). For example, this is how `session_id` is specified when the *Set Session ID* checkbox is activated
 - **JDBC Driver typeMappings**. This field allows you to [pass a list of ClickHouse data type mappings to Java data types used by the JDBC driver](https://github.com/ClickHouse/clickhouse-jdbc#configuration). The connector automatically displays large Integers as strings thanks to this parameter, you can change this by passing your mapping set *(I do not know why)* using
     ```
@@ -98,7 +98,7 @@ In 99% of cases you don't need the Advanced tab, for the remaining 1% you can us
 - **JDBC Driver URL Parameters**. You can pass the remaining [driver parameters](https://github.com/ClickHouse/clickhouse-jdbc#configuration), for example `jdbcCompliance`, in this field. Be careful, the parameter values must be passed in the URL Encoded format, and in the case of passing `custom_http_params` or `typeMappings` in this field and in the previous fields of the Advanced tab, the values of the preceding two fields on the Advanced tab have a higher priority
 - **Set Session ID** checkbox. It is needed to set session level settings in *Initial SQL tab*, generates a `session_id` with a timestamp and a pseudo-random number in the format "tableau-jdbc-connector-*{timestamp}*-*{number}*"
 ### Limited support for UInt64, Int128, (U)Int256 data types
-By default, the driver displays fields of types *UInt64, Int128, (U)Int 256* as strings, **but it displays, not converts**. This means that when you try to write the next calculated field, you will get an error
+By default, the driver displays fields of types *UInt64, Int128, (U)Int256* as strings, **but it displays, not converts**. This means that when you try to write the next calculated field, you will get an error
 ```
 LEFT([myUInt256], 2) // Error!
 ```
