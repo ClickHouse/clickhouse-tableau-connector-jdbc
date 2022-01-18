@@ -177,6 +177,39 @@
       <formula>(%1 * atan(1) / 45)</formula>
       <argument type='real' />
     </function>
+    <function group='numeric' name='RAND' return-type='int'>
+      <formula>rand()</formula>
+    </function>
+    <function group='numeric' name='RANDOM' return-type='real'>
+      <formula>rand()/4294967295</formula>
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant()</formula>
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='int' />
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='real' />
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='str' />
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='bool' />
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='date' />
+    </function>
+    <function group='numeric' name='RAND_CONSTANT' return-type='int'>
+      <formula>randConstant(%1)</formula>
+      <argument type='datetime' />
+    </function>
     <function group='numeric' name='ROUND' return-type='real'>
       <formula>ROUND(%1, 0)</formula>
       <argument type='real' />
@@ -225,6 +258,13 @@
     <function group='string' name='ASCII' return-type='int'>
       <formula>reinterpretAsUInt8(subString(%1, 1, 1))</formula>
       <argument type='str' />
+    </function>
+    <function group='string' name='BAR' return-type='str'>
+      <formula>bar(%1, %2, %3, %4)</formula>
+      <argument type='int' />
+      <argument type='int' />
+      <argument type='int' />
+      <argument type='int' />
     </function>
     <function group='string' name='CHAR' return-type='str'>
       <formula>char(%1)</formula>
@@ -277,9 +317,26 @@
       <argument type='str' />
       <argument type='int' />
     </function>
+    <function group='string' name='FORMAT_READABLE_TIMEDELTA' return-type='str'>
+      <formula>formatReadableTimeDelta(%1)</formula>
+      <argument type='int' />
+    </function>
+    <function group='string' name='FORMAT_READABLE_TIMEDELTA' return-type='str'>
+      <formula>formatReadableTimeDelta(%1, %2)</formula>
+      <argument type='int' />
+      <argument type='str' />
+    </function>
+    <function group='string' name='FORMAT_READABLE_QUANTITY' return-type='str'>
+      <formula>formatReadableQuantity(%1)</formula>
+      <argument type='int' />
+    </function>
     <function group='string' name='GET_JSON_OBJECT' return-type='str'>
       <formula>JSONExtractRaw(%1,%2)</formula>
       <argument type='str' />
+      <argument type='str' />
+    </function>
+    <function group='string' name='GET_SETTING' return-type='str'>
+      <formula>getSetting(%1)</formula>
       <argument type='str' />
     </function>
     <function group='string' name='HOST' return-type='str'>
@@ -385,6 +442,10 @@
     </function>
     <function group='string' name='RTRIM' return-type='str'>
       <formula>RTRIM(%1)</formula>
+      <argument type='str' />
+    </function>
+    <function group='string' name='SHA256' return-type='str'>
+      <formula>SHA256(%1)</formula>
       <argument type='str' />
     </function>
     <function group='string' name='SPACE' return-type='str'>
@@ -988,6 +1049,36 @@
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='str' />
+    </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='real' />
+    </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='date' />
+    </function>
+    <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
+      <formula>toTypeName(any(%1))</formula>
+      <unagg-formula>%1</unagg-formula>
+      <argument type='datetime' />
+    </function>
     <function group='aggregate' name='VAR' return-type='real'>
       <formula>VAR_SAMP(%1)</formula>
       <unagg-formula>%1</unagg-formula>
@@ -1444,6 +1535,18 @@
       <formula>(%1 OR %2)</formula>
       <argument type='bool' />
       <argument type='bool' />
+    </function>
+    <function group='date' name='DATE_BIN' return-type='datetime'>
+      <formula>toStartOfInterval(%3, INTERVAL %2 %1)</formula>
+      <argument type='localstr' />
+      <argument type='int' />
+      <argument type='datetime' />
+    </function>
+    <function group='date' name='DATE_BIN' return-type='datetime'>
+      <formula>toStartOfInterval(%3, INTERVAL %2 %1)</formula>
+      <argument type='localstr' />
+      <argument type='int' />
+      <argument type='date' />
     </function>
     <function group='date' name='DAY' return-type='int'>
       <formula>toDayOfMonth(%1)</formula>
