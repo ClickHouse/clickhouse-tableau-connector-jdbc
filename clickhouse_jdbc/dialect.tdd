@@ -1945,7 +1945,7 @@
     -->
     <format-select>
       <part name='Top' value='SELECT * FROM (' />
-      <part name='TopSampleRecords' value='SELECT modulo(rand64(), CAST(%1 AS Int64) * 2) AS extr_rnd_samp_id, * FROM (' />
+      <part name='TopSampleRecords' value='WITH t1 AS (SELECT rowNumberInAllBlocks() AS row_id, * FROM (' />
       <part name='TopSamplePercent' value='SELECT modulo(rand64(), 100000000) AS extr_rnd_samp_pcnt_id, * FROM (' />
       <part name='Select' value='SELECT %1' />
       <part name='From' value='FROM %1' />
@@ -1954,8 +1954,7 @@
       <part name='Having' value='HAVING %1' />
       <part name='OrderBy' value='ORDER BY %1' />
       <part name='TopSamplePercent' value=') WHERE lessOrEquals(extr_rnd_samp_pcnt_id, %1 * 1000000)' />
-      <part name='TopSampleRecords' value=') LIMIT 1 BY extr_rnd_samp_id' />
-      <part name='TopSampleRecords' value='LIMIT %1' />
+      <part name='TopSampleRecords' value=')), t2 AS (SELECT * FROM (SELECT *, rowNumberInAllBlocks() AS row_id FROM (SELECT row_id AS row_num FROM t1 ORDER BY rand64())) WHERE less(row_num, %1)) SELECT * FROM t1 WHERE t1.row_id IN (SELECT row_id FROM t2)' />
       <part name='Top' value=') LIMIT %1' />
     </format-select>
       <!--
