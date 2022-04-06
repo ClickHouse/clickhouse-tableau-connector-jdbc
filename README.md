@@ -60,23 +60,20 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
             ```
             sudo chmod 755 /opt/tableau/tableau_driver/jdbc/[driver file name].jar
             ```
-2. Create a directory for Tableau connectors. This needs to be the same path on each machine, and on the same drive as the server is installed on. For example:
-    - Windows: `C:\tableau_connectors`
-    - Linux: `/opt/tableau_connectors` 
-3. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it into the folder your created on each node.
-4. Set the `native_api.connect_plugins_path` option [in TSM](https://onlinehelp.tableau.com/current/server-linux/en-us/cli_configuration-set_tsm.htm). For example:
-    - Windows:
-        ```
-        tsm configuration set -k native_api.connect_plugins_path -v C:/tableau_connectors
-        ```
-    - Linux:
-        ```
-        tsm configuration set -k native_api.connect_plugins_path -v /opt/tableau_connectors
-        ```
-    - If you get a configuration error during this step, try adding the `--force-keys` option to the end of the previous command.
-5. Apply the pending configuration changes. This restarts the server.
+2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it into these folders on each node:
+    - Windows (default server installation directory — `C:\ProgramData\Tableau\Tableau Server`):
+      - `[Tableau_Server_Installation_Directory]\data\tabsvc\vizqlserver\Connectors\`
+      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowprocessor\Connectors\`
+      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowqueryservice\Connectors\` (if directory exists)
+      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowminerva\Connectors\` (if directory exists)
+    - Linux (default server installation directory — `/var/opt/tableau/tableau_server`):
+      - `[Tableau_Server_Installation_Directory]/data/tabsvc/vizqlserver/Connectors/`
+      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowprocessor/Connectors/`
+      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowqueryservice/Connectors/` (if directory exists)
+      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowminerva/Connectors/` (if directory exists)
+3. Restart the server.
     ```
-    tsm pending-changes apply
+    tsm restart
     ```
     - Note that whenever you add, remove, or update a connector, you need to restart the server to see the changes.
 ## Connection tips
