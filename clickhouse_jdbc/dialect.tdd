@@ -1697,30 +1697,12 @@
       <argument type='localstr' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula part='year'>CAST(toYear(%2) AS Nullable(String))</formula>
-      <formula part='quarter'>CAST(toQuarter(%2) AS Nullable(String))</formula>
-      <formula part='month'>CAST(toMonth(%2) AS Nullable(String))</formula>
-      <formula part='dayofyear'>CAST(toDayOfYear(%2) AS Nullable(String))</formula>
-      <formula part='day'>CAST(toDayOfMonth(%2) AS Nullable(String))</formula>
-      <formula part='weekday'>CAST(toDayOfWeek(%2) mod 7 + 1 AS Nullable(String))</formula>
-      <formula part='week'>CAST(toWeek(%2, 8) AS Nullable(String))</formula>
-      <formula part='hour'>CAST(toHour(%2) AS Nullable(String))</formula>
-      <formula part='minute'>CAST(toMinute(%2) AS Nullable(String))</formula>
-      <formula part='second'>CAST(toSecond(%2) AS Nullable(String))</formula>
+      <formula>CAST(dateName(%1,%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula part='year'>CAST(toYear(%2) AS Nullable(String))</formula>
-      <formula part='quarter'>CAST(toQuarter(%2) AS Nullable(String))</formula>
-      <formula part='month'>CAST(toMonth(%2) AS Nullable(String))</formula>
-      <formula part='dayofyear'>CAST(toDayOfYear(%2) AS Nullable(String))</formula>
-      <formula part='day'>CAST(toDayOfMonth(%2) AS Nullable(String))</formula>
-      <formula part='weekday'>CAST(toDayOfWeek(%2) mod 7 + 1 AS Nullable(String))</formula>
-      <formula part='week'>CAST(toWeek(%2, 8) AS Nullable(String))</formula>
-      <formula part='hour'>CAST(toHour(%2) AS Nullable(String))</formula>
-      <formula part='minute'>CAST(toMinute(%2) AS Nullable(String))</formula>
-      <formula part='second'>CAST(toSecond(%2) AS Nullable(String))</formula>
+      <formula>CAST(dateName(%1,%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='date' />
     </date-function>
