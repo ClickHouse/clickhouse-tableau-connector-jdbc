@@ -781,14 +781,26 @@
       <argument type='spatial' />
     </function>
     <function group='aggregate' name='AVG' return-type='real'>
-      <formula>AVG(%1)</formula>
+      <formula>avg(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='AVG' return-type='real'>
-      <formula>AVG(CAST(%1 AS Nullable(	DOUBLE)))</formula>
+      <formula>avg(CAST(%1 AS Nullable(	DOUBLE)))</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
+    </function>
+    <function group='aggregate' name='AVG_IF' return-type='real'>
+      <formula>avgIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='real' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='AVG_IF' return-type='real'>
+      <formula>avgIf(CAST(%1 AS Nullable( DOUBLE)),%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='int' />
+      <argument type='bool' />
     </function>
     <function group='aggregate' name='CORR' return-type='real'>
       <formula>CORR(%1, %2)</formula>
@@ -797,24 +809,70 @@
       <argument type='real' />
     </function>
     <function group='aggregate' name='COUNT' return-type='int'>
-      <formula>COUNT(%1)</formula>
+      <formula>count(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='bool' />
     </function>
     <function group='aggregate' name='COUNT' return-type='int'>
-      <formula>COUNT(%1)</formula>
+      <formula>count(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='COUNT' return-type='int'>
-      <formula>COUNT(%1)</formula>
+      <formula>count(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='int' />
+    </function>
+    <function group='aggregate' name='COUNT' return-type='int'>
+      <formula>count(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='str' />
     </function>
     <function group='aggregate' name='COUNT' return-type='int'>
-      <formula>COUNT(%1)</formula>
+      <formula>count(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='datetime' />
+    </function>
+    <function group='aggregate' name='COUNT' return-type='int'>
+      <formula>count(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='date' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='bool' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='real' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='int' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='str' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='datetime' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='COUNT_IF' return-type='int'>
+      <formula>countIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='date' />
+      <argument type='bool' />
     </function>
     <function group='aggregate' name='COUNTD' return-type='int'>
       <formula>COUNT(DISTINCT %1)</formula>
@@ -877,14 +935,14 @@
       <argument type='date' />
     </function>
     <function group='aggregate' name='COVAR' return-type='real'>
-      <formula>COVAR_SAMP(%1, %2)</formula>
+      <formula>covarSamp(%1, %2)</formula>
       <unagg-formula>NULL</unagg-formula>
       <argument type='real' />
       <argument type='real' />
     </function>
     <function group='aggregate' name='COVARP' return-type='real'>
-      <formula>COVAR_POP(%1, %2)</formula>
-      <unagg-formula>((%1 + %2) * 0.0)</unagg-formula>
+      <formula>covarPop(%1, %2)</formula>
+      <unagg-formula>NULL</unagg-formula>
       <argument type='real' />
       <argument type='real' />
     </function>
@@ -899,29 +957,65 @@
       <argument type='bool' />
     </function>
     <function group='aggregate' name='MAX' return-type='real'>
-      <formula>MAX(%1)</formula>
+      <formula>max(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='MAX' return-type='int'>
-      <formula>MAX(%1)</formula>
+      <formula>max(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
     <function group='aggregate' name='MAX' return-type='str'>
-      <formula>MAX(%1)</formula>
+      <formula>max(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='str' />
     </function>
     <function group='aggregate' name='MAX' return-type='datetime'>
-      <formula>MAX(%1)</formula>
+      <formula>max(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='datetime' />
     </function>
     <function group='aggregate' name='MAX' return-type='date'>
-      <formula>MAX(%1)</formula>
+      <formula>max(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='date' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='bool'>
+      <formula>maxIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='bool' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='real'>
+      <formula>maxIF(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='real' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='int'>
+      <formula>maxIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='int' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='str'>
+      <formula>maxIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='str' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='datetime'>
+      <formula>maxIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='datetime' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MAX_IF' return-type='date'>
+      <formula>maxIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='date' />
+      <argument type='bool' />
     </function>
     <function group='aggregate' name='MEDIAN' return-type='real'>
       <formula>quantile(0.5)(%1)</formula>
@@ -949,29 +1043,65 @@
       <argument type='bool' />
     </function>
     <function group='aggregate' name='MIN' return-type='real'>
-      <formula>MIN(%1)</formula>
+      <formula>min(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='MIN' return-type='int'>
-      <formula>MIN(%1)</formula>
+      <formula>min(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
     </function>
     <function group='aggregate' name='MIN' return-type='str'>
-      <formula>MIN(%1)</formula>
+      <formula>min(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='str' />
     </function>
     <function group='aggregate' name='MIN' return-type='datetime'>
-      <formula>MIN(%1)</formula>
+      <formula>min(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='datetime' />
     </function>
     <function group='aggregate' name='MIN' return-type='date'>
-      <formula>MIN(%1)</formula>
+      <formula>min(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='date' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='bool'>
+      <formula>minIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='bool' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='real'>
+      <formula>minIF(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='real' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='int'>
+      <formula>minIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='int' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='str'>
+      <formula>minIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='str' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='datetime'>
+      <formula>minIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='datetime' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='MIN_IF' return-type='date'>
+      <formula>minIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='date' />
+      <argument type='bool' />
     </function>
     <function group='aggregate' name='KURTOSIS' return-type='real'>
       <formula>kurtSamp(%1)</formula>
@@ -1038,24 +1168,36 @@
       <argument type='int' />
     </function>
     <function group='aggregate' name='STDEV' return-type='real'>
-      <formula>STDDEV_SAMP(%1)</formula>
-      <unagg-formula>NULL</unagg-formula>
+      <formula>stddevSamp(%1)</formula>
+      <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='STDEVP' return-type='real'>
-      <formula>CASE WHEN COUNT(%1) &gt; 0 THEN&#10;&#9;SQRT((COUNT(%1) * SUM(POWER(%1,2)) - POWER(SUM(%1), 2) ) / (POWER(COUNT(%1),2)))&#10;&#9;ELSE NULL END</formula>
+      <formula>stddevPop(%1)</formula>
       <unagg-formula>(%1 * 0.0)</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='SUM' return-type='real'>
-      <formula>SUM(%1)</formula>
+      <formula>sum(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='SUM' return-type='int'>
-      <formula>SUM(%1)</formula>
+      <formula>sum(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='int' />
+    </function>
+    <function group='aggregate' name='SUM_IF' return-type='real'>
+      <formula>sumIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='real' />
+      <argument type='bool' />
+    </function>
+    <function group='aggregate' name='SUM_IF' return-type='int'>
+      <formula>sumIf(%1,%2)</formula>
+      <unagg-formula>NULL</unagg-formula>
+      <argument type='int' />
+      <argument type='bool' />
     </function>
     <function group='aggregate' name='TO_TYPE_NAME' return-type='str'>
       <formula>toTypeName(any(%1))</formula>
@@ -1088,12 +1230,12 @@
       <argument type='datetime' />
     </function>
     <function group='aggregate' name='VAR' return-type='real'>
-      <formula>VAR_SAMP(%1)</formula>
+      <formula>varSamp(%1)</formula>
       <unagg-formula>%1</unagg-formula>
       <argument type='real' />
     </function>
     <function group='aggregate' name='VARP' return-type='real'>
-      <formula>VAR_POP(%1)</formula>
+      <formula>varPop(%1)</formula>
       <unagg-formula>(%1 * 0.0)</unagg-formula>
       <argument type='real' />
     </function>
