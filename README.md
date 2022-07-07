@@ -17,11 +17,11 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 ## Before you install
 
 - Make sure you...
-  - use Tableau **2020.3+**
+  - use Tableau **2020.4+**
   - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases/tag/v0.1.4))
 
 ## How to install (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -32,7 +32,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Prep Builder)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -43,7 +43,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Server)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
@@ -61,16 +61,8 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
             sudo chmod 755 /opt/tableau/tableau_driver/jdbc/[driver file name].jar
             ```
 2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it into these folders on each node:
-    - Windows (default server installation directory — `C:\ProgramData\Tableau\Tableau Server`):
-      - `[Tableau_Server_Installation_Directory]\data\tabsvc\vizqlserver\Connectors\`
-      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowprocessor\Connectors\`
-      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowqueryservice\Connectors\` (if directory exists)
-      - `[Tableau_Server_Installation_Directory]\data\tabsvc\flowminerva\Connectors\` (if directory exists)
-    - Linux (default server installation directory — `/var/opt/tableau/tableau_server`):
-      - `[Tableau_Server_Installation_Directory]/data/tabsvc/vizqlserver/Connectors/`
-      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowprocessor/Connectors/`
-      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowqueryservice/Connectors/` (if directory exists)
-      - `[Tableau_Server_Installation_Directory]/data/tabsvc/flowminerva/Connectors/` (if directory exists)
+    - Linux: `/opt/tableau/connectors`
+    - Windows: `C:\Program Files\Tableau\Connectors`
 3. Restart the server.
     ```
     tsm restart
