@@ -1839,23 +1839,59 @@
       <argument type='localstr' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula>CAST(dateName(%1,%2) AS Nullable(String))</formula>
+      <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
+      <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
+      <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
+      <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='week'>CAST(dateName('week', toStartOfWeek(%2, 8)) AS Nullable(String))</formula>
+      <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
+      <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
+      <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula>CAST(dateName(%1,%2) AS Nullable(String))</formula>
+      <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
+      <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
+      <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
+      <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='week'>CAST(dateName('week', toStartOfWeek(%2, 8)) AS Nullable(String))</formula>
+      <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
+      <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
+      <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='date' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula part='week'>CAST(toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END)) AS Nullable(String))</formula>
+      <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
+      <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
+      <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
+      <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='week'>CAST(dateName('week',toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))) AS Nullable(String))</formula>
+      <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
+      <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
+      <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATENAME' return-type='str'>
-      <formula part='week'>CAST(toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END)) AS Nullable(String))</formula>
+      <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
+      <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
+      <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
+      <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='week'>CAST(dateName('week',toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))) AS Nullable(String))</formula>
+      <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
+      <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
+      <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='localstr' />
@@ -1894,13 +1930,31 @@
       <argument type='date' />
     </date-function>
     <date-function name='DATEPART' return-type='int'>
+      <formula part='year'>toYear(%2)</formula>
+      <formula part='quarter'>toQuarter(%2)</formula>
+      <formula part='month'>toMonth(%2)</formula>
+      <formula part='dayofyear'>toDayOfYear(%2)</formula>
+      <formula part='day'>toDayOfMonth(%2)</formula>
+      <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <formula part='hour'>toHour(%2)</formula>
+      <formula part='minute'>toMinute(%2)</formula>
+      <formula part='second'>toSecond(%2)</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATEPART' return-type='int'>
+      <formula part='year'>toYear(%2)</formula>
+      <formula part='quarter'>toQuarter(%2)</formula>
+      <formula part='month'>toMonth(%2)</formula>
+      <formula part='dayofyear'>toDayOfYear(%2)</formula>
+      <formula part='day'>toDayOfMonth(%2)</formula>
+      <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <formula part='hour'>toHour(%2)</formula>
+      <formula part='minute'>toMinute(%2)</formula>
+      <formula part='second'>toSecond(%2)</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='localstr' />
@@ -1918,13 +1972,15 @@
       <argument type='date' />
     </date-function>
     <date-function name='DATETRUNC' return-type='datetime'>
+      <formula>toStartOfInterval(%2, INTERVAL 1 %1)</formula>
       <formula part='week'>toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='localstr' />
     </date-function>
     <date-function name='DATETRUNC' return-type='datetime'>
-      <formula part='week'>toStartOfWeek(toDateTime(%2), (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <formula>toStartOfInterval(%2, INTERVAL 1 %1)</formula>
+      <formula part='week'>toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='localstr' />
