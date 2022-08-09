@@ -1903,12 +1903,14 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
+      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, 8)</formula>
+      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1917,12 +1919,14 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
+      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, 8)</formula>
+      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1931,12 +1935,14 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
+      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1946,12 +1952,14 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
+      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
+      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
