@@ -988,7 +988,7 @@
       <argument type='bool' />
     </function>
     <function group='aggregate' name='MAX_IF' return-type='real'>
-      <formula>maxIF(%1,%2)</formula>
+      <formula>maxIf(%1,%2)</formula>
       <unagg-formula>NULL</unagg-formula>
       <argument type='real' />
       <argument type='bool' />
@@ -1074,7 +1074,7 @@
       <argument type='bool' />
     </function>
     <function group='aggregate' name='MIN_IF' return-type='real'>
-      <formula>minIF(%1,%2)</formula>
+      <formula>minIf(%1,%2)</formula>
       <unagg-formula>NULL</unagg-formula>
       <argument type='real' />
       <argument type='bool' />
