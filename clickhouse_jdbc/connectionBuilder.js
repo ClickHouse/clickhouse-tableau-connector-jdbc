@@ -70,6 +70,6 @@
 
     // building full URL string
     var urlBuilder = "jdbc:clickhouse://" + attr['server'] + ":" + attr['port']
-        + '/?' + customUrlParamsString;
+        + "/?" + customUrlParamsString;
     return [urlBuilder];
 })
