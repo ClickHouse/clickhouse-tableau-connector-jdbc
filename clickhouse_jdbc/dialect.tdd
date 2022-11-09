@@ -461,7 +461,7 @@
       <argument type='int' />
     </function>
     <function group='string' name='SPLIT' return-type='str'>
-      <formula>toString(arrayElement(splitByString(&apos;%2&apos;,%1),%3))
+      <formula>toString(arrayElement(splitByString(&apos;%2&apos;,ifNull(%1,'')),%3))
       </formula>
       <argument type='str' />
       <argument type='localstr' />
