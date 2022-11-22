@@ -583,17 +583,17 @@
       <argument type='int' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
+      <formula>date_add(second, date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE)))</formula>
       <argument type='str' />
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
+      <formula>date_add(second, date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE)))</formula>
       <argument type='datetime' />
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKEDATETIME' return-type='datetime'>
-      <formula>date_add('second', date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE))</formula>
+      <formula>date_add(second, date_diff('second', date_trunc('day', CAST(%2 AS Nullable(DATETIME))), CAST(%2 AS Nullable(DATETIME))), CAST(%1 AS Nullable(DATE)))</formula>
       <argument type='date' />
       <argument type='datetime' />
     </function>
@@ -1412,42 +1412,42 @@
       <argument type='date' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
+      <formula>date_add(second, - %2 * 86400, %1)</formula>
       <argument type='datetime' />
       <argument type='real' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
+      <formula>date_add(second, - %2 * 86400, %1)</formula>
       <argument type='datetime' />
       <argument type='int' />
     </function>
     <function group='operator' name='-' return-type='datetime'>
-      <formula>DATE_ADD(SECOND, - %2 * 86400, %1)</formula>
+      <formula>date_add(second, - %2 * 86400, %1)</formula>
       <argument type='date' />
       <argument type='real' />
     </function>
     <function group='operator' name='-' return-type='date'>
-      <formula>toDate(DATE_ADD(SECOND, - %2 * 86400, %1))</formula>
+      <formula>toDate(date_add(second, - %2 * 86400, %1))</formula>
       <argument type='date' />
       <argument type='int' />
     </function>
     <function group='operator' name='/' return-type='real'>
-      <formula>(toFloat64(%1) / NULLIF(%2,0))</formula>
+      <formula>(toFloat64(%1) / nullIf(%2,0))</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
     <function group='operator' name='/' return-type='real'>
-      <formula>(%1 / NULLIF(%2,0))</formula>
+      <formula>(%1 / nullIf(%2,0))</formula>
       <argument type='real' />
       <argument type='int' />
     </function>
     <function group='operator' name='/' return-type='real'>
-      <formula>(%1 / NULLIF(%2,0))</formula>
+      <formula>(%1 / nullIf(%2,0))</formula>
       <argument type='int' />
       <argument type='real' />
     </function>
     <function group='operator' name='/' return-type='real'>
-      <formula>(%1 / NULLIF(%2,0))</formula>
+      <formula>(%1 / nullIf(%2,0))</formula>
       <argument type='int' />
       <argument type='int' />
     </function>
