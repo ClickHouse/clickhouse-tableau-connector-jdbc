@@ -406,6 +406,10 @@
       <argument type='str' />
       <argument type='str' />
     </function>
+    <function group='string' name='PROPER' return-type='str'>
+      <formula>arrayStringConcat(arrayMap(x -> concat(x.1, x.2, x.3, x.4), flatten(arrayConcat(arrayZip(extractAllGroupsHorizontal(%1, '([^\p{L}\d]*)([\p{L}\d]{1})([\p{L}\d]*)([^\p{L}\d]*)')[1], arrayMap(x -> upperUTF8(x), extractAllGroupsHorizontal(%1, '([^\p{L}\d]*)([\p{L}\d]{1})([\p{L}\d]*)([^\p{L}\d]*)')[2]), arrayMap(x -> lowerUTF8(x), extractAllGroupsHorizontal(%1, '([^\p{L}\d]*)([\p{L}\d]{1})([\p{L}\d]*)([^\p{L}\d]*)')[3]), extractAllGroupsHorizontal(%1, '([^\p{L}\d]*)([\p{L}\d]{1})([\p{L}\d]*)([^\p{L}\d]*)')[4])))))</formula>
+      <argument type='str' />
+    </function>
     <function group='string' name='REGEXP_EXTRACT' return-type='str'>
       <formula>replaceRegexpAll(toString(extract(%1,%2)), '[\[\]\']' , '')</formula>
       <argument type='str' />

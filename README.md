@@ -12,7 +12,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 - In comparison with **Other Databases (JDBC)**: This connector has fine-tuning SQL queries to implement most of the standard Tableau functionality (including multiple JOINS in the data source, Sets, etc.) and has a friendly connection dialog ;)
 
 ## Future plans
-- Publishing the connector in [extensiongallery.tableau.com](https://extensiongallery.tableau.com/connectors)
+- ~~Publishing the connector in [exchange.tableau.com](https://exchange.tableau.com/connectors)~~
 
 ## Before you install
 
@@ -21,7 +21,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
   - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases/tag/v0.1.4))
 
 ## How to install (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -32,7 +32,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Prep Builder)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -43,7 +43,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
 
 ## How to install (Tableau Server)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch7) (version 0.3.2-patch7 required) and place the `clickhouse-jdbc-0.3.2-patch7-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
@@ -134,6 +134,13 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **`MEDIAN_EXACT([my_number])`** *(added in v0.1.3)* — Exactly computes the median of a numeric data sequence. Equivalent of [`quantileExact(0.5)(...)`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/#quantileexact).
 - **`MOD([my_number_1], [my_number_2])`** — Calculates the remainder after division. If arguments are floating-point numbers, they are pre-converted to integers by dropping the decimal portion. Equivalent of [`modulo()`](https://clickhouse.com/docs/en/sql-reference/functions/arithmetic-functions/#modulo).
 - **`PERCENTILE_EXACT([my_number], [level_float])`** *(added in v0.1.3)* — Exactly computes the percentile of a numeric data sequence. Recommended level range is [0.01, 0.99]. Equivalent of [`quantileExact()()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/#quantileexact).
+- **`PROPER([my_string])`** *(added in v0.2.5)* - Converts a text string so the first letter of each word is capitalized and the remaining letters are in lowercase. Spaces and non-alphanumeric characters such as punctuation also act as separators. For example:
+    ```
+    PROPER("PRODUCT name") => "Product Name"
+    ```
+    ```
+    PROPER("darcy-mae") => "Darcy-Mae"
+    ```
 - **`RAND()`** *(added in v0.2.1)* — returns integer (UInt32) number, for example `3446222955`. Equivalent of [`rand()`](https://clickhouse.com/docs/en/sql-reference/functions/random-functions/#rand).
 - **`RANDOM()`** *(added in v0.2.1)* — unofficial [`RANDOM()`](https://kb.tableau.com/articles/issue/random-function-produces-inconsistent-results) Tableau function, which returns float between 0 and 1.
 - **`RAND_CONSTANT([optional_field])`** *(added in v0.2.1)* — Produces a constant column with a random value. Something like `{RAND()}` Fixed LOD, but faster. Equivalent of [`randConstant()`](https://clickhouse.com/docs/en/sql-reference/functions/random-functions/#randconstant).
