@@ -1714,6 +1714,38 @@
       <formula>(CAST(%1 AS Nullable(DATE)) IS NOT NULL)</formula>
       <argument type='str' />
     </function>
+    <function group='date' name='ISOQUARTER' return-type='int'>
+      <formula>if(isNull(%1), NULL, least(ceiling(toISOWeek(%1) / 13), 4))</formula>
+      <argument type='date' />
+    </function>
+    <function group='date' name='ISOQUARTER' return-type='int'>
+      <formula>if(isNull(%1), NULL, least(ceiling(toISOWeek(%1) / 13), 4))</formula>
+      <argument type='datetime' />
+    </function>
+    <function group='date' name='ISOWEEK' return-type='int'>
+      <formula>if(isNull(%1), NULL, toISOWeek(%1))</formula>
+      <argument type='date' />
+    </function>
+    <function group='date' name='ISOWEEK' return-type='int'>
+      <formula>if(isNull(%1), NULL, toISOWeek(%1))</formula>
+      <argument type='datetime' />
+    </function>
+    <function group='date' name='ISOWEEKDAY' return-type='int'>
+      <formula>if(isNull(%1), NULL, toDayOfWeek(%1))</formula>
+      <argument type='date' />
+    </function>
+    <function group='date' name='ISOWEEKDAY' return-type='int'>
+      <formula>if(isNull(%1), NULL, toDayOfWeek(%1))</formula>
+      <argument type='datetime' />
+    </function>
+    <function group='date' name='ISOYEAR' return-type='int'>
+      <formula>if(isNull(%1), NULL, toISOYear(%1))</formula>
+      <argument type='date' />
+    </function>
+    <function group='date' name='ISOYEAR' return-type='int'>
+      <formula>if(isNull(%1), NULL, toISOYear(%1))</formula>
+      <argument type='datetime' />
+    </function>
     <function group='date' name='MAX' return-type='datetime'>
       <formula>GREATEST(%1, %2)</formula>
       <argument type='datetime' />
@@ -1778,34 +1810,54 @@
     </date-function>
     <date-function name='DATEADD' return-type='datetime'>
       <formula>CAST(date_add(%1, %2, %3) AS Nullable(DateTime))</formula>
+      <formula part='iso-year'>CAST(multiIf(isNull(%2) or isNull(%3), NULL, %2 == 0, %3, date_add(WEEK, sign(%2) * arraySum(arraySlice(arrayFlatten(arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((ys) -> sign(%2) * ys, range(toUInt16OrDefault(least(toISOYear(toDateTimeOrDefault(%3)), toISOYear(toDateTimeOrDefault(%3)) + toInt16OrDefault(%2) + sign(toInt16OrDefault(%2)))), toUInt16OrDefault(greatest(toISOYear(toDateTimeOrDefault(%3)), toISOYear(toDateTimeOrDefault(%3)) + toInt16OrDefault(%2) + sign(toInt16OrDefault(%2)))), 1)))), greaterOrEquals(%2,0) + toInt16((1-sign(toInt16OrDefault(%2)))/2), abs(toInt16OrDefault(%2)))), %3)) AS Nullable(DateTime))</formula>
+      <formula part='iso-quarter'>CAST(multiIf(isNull(%2) or isNull(%3), NULL, %2 == 0, if(toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(toISOYear(%3)),'-01-01')) + 7)) - 1) = 53 and toISOWeek(%3) > 39, date_add(WEEK, 1, %3), %3), date_add(WEEK, -13 + sign(%2) * arraySum(arraySlice(arrayFlatten(arrayMap((q) -> arraySort((s) -> sign(toInt16OrDefault(%2))*s, [13,13,13, q - 39]), arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((ys) -> sign(%2) * ys, range(toUInt16OrDefault(least(toISOYear(toDateTimeOrDefault(%3)), toISOYear(toDateTimeOrDefault(%3)) + toInt16OrDefault(%2) + sign(toInt16OrDefault(%2)))), toUInt16OrDefault(greatest(toISOYear(toDateTimeOrDefault(%3)), toISOYear(toDateTimeOrDefault(%3)) + toInt16OrDefault(%2) + sign(toInt16OrDefault(%2)))) + 1, 1))))), 3*(1 - sign(toInt16OrDefault(%2))) - (-sign(toInt16OrDefault(%2))) * toInt8(least(ceiling(toISOWeek(toDateTimeOrDefault(%3)) / 13), 4)), abs(toInt16OrDefault(%2)) + sign(toInt16OrDefault(%2)))), %3)) AS Nullable(DateTime))</formula>
+      <formula part='iso-week'>CAST(if(isNull(%2) or isNull(%3), NULL, date_add(WEEK, %2, %3)) AS Nullable(DateTime))</formula>
+      <formula part='iso-weekday'>CAST(if(isNull(%2) or isNull(%3), NULL, date_add(DAY, %2, %3)) AS Nullable(DateTime))</formula>
       <argument type='localstr' />
       <argument type='int' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
       <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%3) - toISOYear(%2) AS Nullable(INTEGER))</formula>
+      <formula part='iso-quarter'>CAST(if(isNull(%2) or isNull(%3), NULL, sign(%3-%2) * length(arrayFilter((i) -> lessOrEquals(i, date_diff(WEEK, date_add(DAY, least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)*13*7, toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), arrayCumSum(arraySlice(arrayFlatten(arrayMap((q) -> arraySort((s) -> sign(%3-%2)*s, [13,13,13, q - 39]), arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((s) -> sign(%3-%2)*s, range(toUInt16(toISOYear(toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))),toISOYear(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))+1, 1))))), if(greaterOrEquals(%3,%2), 1+toInt16(least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)), 5-toInt16(least(floor((toISOWeek(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))/13),4)))))))) AS Nullable(INTEGER))</formula>
       <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-week'>CAST(sign(date_diff(DAY, %2, %3)) * date_diff(WEEK, toStartOfWeek(least(%2, %3), 3), greatest(%2, %3)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-weekday'>CAST(date_diff(DAY, %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
       <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%3) - toISOYear(%2) AS Nullable(INTEGER))</formula>
+      <formula part='iso-quarter'>CAST(if(isNull(%2) or isNull(%3), NULL, sign(%3-%2) * length(arrayFilter((i) -> lessOrEquals(i, date_diff(WEEK, date_add(DAY, least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)*13*7, toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), arrayCumSum(arraySlice(arrayFlatten(arrayMap((q) -> arraySort((s) -> sign(%3-%2)*s, [13,13,13, q - 39]), arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((s) -> sign(%3-%2)*s, range(toUInt16(toISOYear(toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))),toISOYear(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))+1, 1))))), if(greaterOrEquals(%3,%2), 1+toInt16(least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)), 5-toInt16(least(floor((toISOWeek(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))/13),4)))))))) AS Nullable(INTEGER))</formula>
       <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-week'>CAST(sign(date_diff(DAY, %2, %3)) * date_diff(WEEK, toStartOfWeek(least(%2, %3), 3), greatest(%2, %3)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-weekday'>CAST(date_diff(DAY, %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
       <argument type='date' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
       <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%3) - toISOYear(%2) AS Nullable(INTEGER))</formula>
+      <formula part='iso-quarter'>CAST(if(isNull(%2) or isNull(%3), NULL, sign(%3-%2) * length(arrayFilter((i) -> lessOrEquals(i, date_diff(WEEK, date_add(DAY, least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)*13*7, toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), arrayCumSum(arraySlice(arrayFlatten(arrayMap((q) -> arraySort((s) -> sign(%3-%2)*s, [13,13,13, q - 39]), arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((s) -> sign(%3-%2)*s, range(toUInt16(toISOYear(toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))),toISOYear(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))+1, 1))))), if(greaterOrEquals(%3,%2), 1+toInt16(least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)), 5-toInt16(least(floor((toISOWeek(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))/13),4)))))))) AS Nullable(INTEGER))</formula>
       <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-week'>CAST(sign(date_diff(DAY, %2, %3)) * date_diff(WEEK, toStartOfWeek(least(%2, %3), 3), greatest(%2, %3)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-weekday'>CAST(date_diff(DAY, %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATEDIFF' return-type='int'>
       <formula>CAST(dateDiff('%1', %2, %3) AS Nullable(INTEGER))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%3) - toISOYear(%2) AS Nullable(INTEGER))</formula>
+      <formula part='iso-quarter'>CAST(if(isNull(%2) or isNull(%3), NULL, sign(%3-%2) * length(arrayFilter((i) -> lessOrEquals(i, date_diff(WEEK, date_add(DAY, least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)*13*7, toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))), arrayCumSum(arraySlice(arrayFlatten(arrayMap((q) -> arraySort((s) -> sign(%3-%2)*s, [13,13,13, q - 39]), arrayMap((y) -> toISOWeek(toStartOfISOYear(date_add(YEAR, 1, toDate(concat(toString(y), '-01-01')) + 7)) - 1), arraySort((s) -> sign(%3-%2)*s, range(toUInt16(toISOYear(toStartOfISOYear(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))),toISOYear(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))+1, 1))))), if(greaterOrEquals(%3,%2), 1+toInt16(least(floor((toISOWeek(least(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3)))-1)/13),3)), 5-toInt16(least(floor((toISOWeek(greatest(toDateTimeOrDefault(%2), toDateTimeOrDefault(%3))))/13),4)))))))) AS Nullable(INTEGER))</formula>
       <formula part='week'>CAST(dateDiff('%1', toStartOfWeek(%2, 8), toStartOfWeek(%3, 8)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-week'>CAST(sign(date_diff(DAY, %2, %3)) * date_diff(WEEK, toStartOfWeek(least(%2, %3), 3), greatest(%2, %3)) AS Nullable(INTEGER))</formula>
+      <formula part='iso-weekday'>CAST(date_diff(DAY, %2, %3) AS Nullable(INTEGER))</formula>
       <argument type='localstr' />
       <argument type='date' />
       <argument type='date' />
@@ -1844,12 +1896,16 @@
     </date-function>
     <date-function name='DATENAME' return-type='str'>
       <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%2) AS Nullable(String))</formula>
       <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='iso-quarter'>CAST(least(ceiling(toISOWeek(%2)/13),4) AS Nullable(String))</formula>
       <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
       <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
       <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
       <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='iso-weekday'>CAST(toDayOfWeek(%2) AS Nullable(String))</formula>
       <formula part='week'>CAST(dateName('week', toStartOfWeek(%2, 8)) AS Nullable(String))</formula>
+      <formula part='iso-week'>CAST(toISOWeek(%2) AS Nullable(String))</formula>
       <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
       <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
       <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
@@ -1858,12 +1914,16 @@
     </date-function>
     <date-function name='DATENAME' return-type='str'>
       <formula part='year'>CAST(dateName('year',%2) AS Nullable(String))</formula>
+      <formula part='iso-year'>CAST(toISOYear(%2) AS Nullable(String))</formula>
       <formula part='quarter'>CAST(dateName('quarter',%2) AS Nullable(String))</formula>
+      <formula part='iso-quarter'>CAST(if(isNull(%2), NULL, least(ceiling(toISOWeek(%2)/13),4)) AS Nullable(String))</formula>
       <formula part='month'>CAST(dateName('month',%2) AS Nullable(String))</formula>
       <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
       <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
       <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
+      <formula part='iso-weekday'>CAST(toDayOfWeek(%2) AS Nullable(String))</formula>
       <formula part='week'>CAST(dateName('week', toStartOfWeek(%2, 8)) AS Nullable(String))</formula>
+      <formula part='iso-week'>CAST(leftPad(toString(toISOWeek(%2)), 2, '0') AS Nullable(String))</formula>
       <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
       <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
       <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
@@ -1907,14 +1967,16 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
-      <formula part='isoyear'>toISOYear(%2)</formula>
+      <formula part='iso-year'>if(isNull(%2), NULL, toISOYear(%2))</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
+      <formula part='iso-quarter'>if(isNull(%2), NULL, least(ceiling(toISOWeek(%2) / 13), 4))</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
+      <formula part='iso-weekday'>if(isNull(%2), NULL, toDayOfWeek(%2))</formula>
       <formula part='week'>toWeek(%2, 8)</formula>
-      <formula part='isoweek'>toISOWeek(%2)</formula>
+      <formula part='iso-week'>if(isNull(%2), NULL, toISOWeek(%2))</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1923,14 +1985,16 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
-      <formula part='isoyear'>toISOYear(%2)</formula>
+      <formula part='iso-year'>if(isNull(%2), NULL, toISOYear(%2))</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
+      <formula part='iso-quarter'>if(isNull(%2), NULL, least(ceiling(toISOWeek(%2) / 13), 4))</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
+      <formula part='iso-weekday'>if(isNull(%2), NULL, toDayOfWeek(%2))</formula>
       <formula part='week'>toWeek(%2, 8)</formula>
-      <formula part='isoweek'>toISOWeek(%2)</formula>
+      <formula part='iso-week'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1939,14 +2003,12 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
-      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
-      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1956,14 +2018,12 @@
     </date-function>
     <date-function name='DATEPART' return-type='int'>
       <formula part='year'>toYear(%2)</formula>
-      <formula part='isoyear'>toISOYear(%2)</formula>
       <formula part='quarter'>toQuarter(%2)</formula>
       <formula part='month'>toMonth(%2)</formula>
       <formula part='dayofyear'>toDayOfYear(%2)</formula>
       <formula part='day'>toDayOfMonth(%2)</formula>
       <formula part='weekday'>toDayOfWeek(%2) mod 7 + 1</formula>
       <formula part='week'>toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))</formula>
-      <formula part='isoweek'>toISOWeek(%2)</formula>
       <formula part='hour'>toHour(%2)</formula>
       <formula part='minute'>toMinute(%2)</formula>
       <formula part='second'>toSecond(%2)</formula>
@@ -1973,13 +2033,21 @@
     </date-function>
     <date-function name='DATETRUNC' return-type='datetime'>
       <formula>toStartOfInterval(%2, INTERVAL 1 %1)</formula>
+      <formula part='iso-year'>if(isNull(%2), NULL, toStartOfISOYear(%2))</formula>
+      <formula part='iso-quarter'>if(isNull(%2), NULL, date_add(DAY, least(floor((toISOWeek(%2) - 1) / 13), 3) * 13 * 7, toStartOfISOYear(%2)))</formula>
       <formula part='week'>toStartOfWeek(%2, 8)</formula>
+      <formula part='iso-week'>if(isNull(%2), NULL, toStartOfWeek(%2, 3))</formula>
+      <formula part='iso-weekday'>if(isNull(%2), NULL, toStartOfDay(%2))</formula>
       <argument type='localstr' />
       <argument type='datetime' />
     </date-function>
     <date-function name='DATETRUNC' return-type='datetime'>
       <formula>toStartOfInterval(%2, INTERVAL 1 %1)</formula>
+      <formula part='iso-year'>if(isNull(%2), NULL, toStartOfISOYear(%2))</formula>
+      <formula part='iso-quarter'>if(isNull(%2), NULL, date_add(DAY, least(floor((toISOWeek(%2) - 1) / 13), 3) * 13 * 7, toStartOfISOYear(%2)))</formula>
       <formula part='week'>toStartOfWeek(%2, 8)</formula>
+      <formula part='iso-week'>if(isNull(%2), NULL, toStartOfWeek(%2, 3))</formula>
+      <formula part='iso-weekday'>if(isNull(%2), NULL, toStartOfDay(%2))</formula>
       <argument type='localstr' />
       <argument type='date' />
     </date-function>
