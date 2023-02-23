@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <dialect name='ClickHouse'
          class='clickhouse_jdbc'
+         base='PostgreSQL90Dialect'
          version='18.1'>
     <function-map>
     <function group='numeric' name='ABS' return-type='real'>
@@ -110,21 +111,6 @@
       <argument type='int' />
       <argument type='int' />
     </function>
-    <function group='numeric' name='MAX' return-type='str'>
-      <formula>GREATEST(%1, %2)</formula>
-      <argument type='str' />
-      <argument type='str' />
-    </function>
-    <function group='numeric' name='MAX' return-type='datetime'>
-      <formula>GREATEST(%1,%2)</formula>
-      <argument type='datetime' />
-      <argument type='datetime' />
-    </function>
-    <function group='numeric' name='MAX' return-type='date'>
-      <formula>GREATEST(%1,%2)</formula>
-      <argument type='date' />
-      <argument type='date' />
-    </function>
     <function group='numeric' name='MIN' return-type='real'>
       <formula>LEAST(%1,%2)</formula>
       <argument type='real' />
@@ -134,21 +120,6 @@
       <formula>LEAST(%1,%2)</formula>
       <argument type='int' />
       <argument type='int' />
-    </function>
-    <function group='numeric' name='MIN' return-type='str'>
-      <formula>LEAST(%1,%2)</formula>
-      <argument type='str' />
-      <argument type='str' />
-    </function>
-    <function group='numeric' name='MIN' return-type='datetime'>
-      <formula>LEAST(%1,%2)</formula>
-      <argument type='datetime' />
-      <argument type='datetime' />
-    </function>
-    <function group='numeric' name='MIN' return-type='date'>
-      <formula>LEAST(%1,%2)</formula>
-      <argument type='date' />
-      <argument type='date' />
     </function>
     <function group='numeric' name='MOD' return-type='int'>
       <formula>MOD(%1,%2)</formula>
@@ -2090,11 +2061,11 @@
     <aggregation value='AGG_PERCENTILE'/>
     <aggregation value='AGG_SKEWNESS'/>
     <aggregation value='AGG_KURTOSIS'/>
+    <aggregation value='AGG_INOUT'/>
 <!--
     <aggregation value='AGG_COLLECT'/>
     <aggregation value='AGG_QUART1'/>
     <aggregation value='AGG_QUART3'/>
-    <aggregation value='AGG_INOUT'/>
     <aggregation value='AGG_USER'/>
 -->
     <aggregation value='AGG_YEAR'/>
@@ -2108,6 +2079,10 @@
     <aggregation value='AGG_HOUR'/>
     <aggregation value='AGG_MINUTE'/>
     <aggregation value='AGG_SECOND'/>
+    <aggregation value='AGG_ISO_YEAR'/>
+    <aggregation value='AGG_ISO_QTR'/>
+    <aggregation value='AGG_ISO_WEEK'/>
+    <aggregation value='AGG_ISO_WEEKDAY'/>
 
     <aggregation value='TRUNC_YEAR'/>
     <aggregation value='TRUNC_QTR'/>
@@ -2117,7 +2092,11 @@
     <aggregation value='TRUNC_HOUR'/>
     <aggregation value='TRUNC_MINUTE'/>
     <aggregation value='TRUNC_SECOND'/>
-  </supported-aggregations>
+    <aggregation value='TRUNC_ISO_YEAR'/>
+    <aggregation value='TRUNC_ISO_QTR'/>
+    <aggregation value='TRUNC_ISO_WEEK'/>
+    <aggregation value='TRUNC_ISO_WEEKDAY'/>
+   </supported-aggregations>
 
   <!--
     sql-format
@@ -2138,14 +2117,14 @@
     -->
     <date-parts>
       <date-part-group>
-        <date-function name='DATETRUNC' />
+        <!-- Default: used by DATEPART and DATENAME -->
         <part name='year' value='year' />
         <part name='quarter' value='quarter' />
         <part name='month' value='month' />
         <part name='day' value='day' />
-        <part name='dayofyear' value='day' />
+        <part name='dayofyear' value='dayofyear' />
         <part name='week' value='week' />
-        <part name='weekday' value='day' />
+        <part name='weekday' value='weekday' />
         <part name='hour' value='hour' />
         <part name='minute' value='minute' />
         <part name='second' value='second' />
@@ -2165,6 +2144,19 @@
       </date-part-group>
       <date-part-group>
         <date-function name='DATEDIFF' />
+        <part name='year' value='year' />
+        <part name='quarter' value='quarter' />
+        <part name='month' value='month' />
+        <part name='day' value='day' />
+        <part name='dayofyear' value='day' />
+        <part name='week' value='week' />
+        <part name='weekday' value='day' />
+        <part name='hour' value='hour' />
+        <part name='minute' value='minute' />
+        <part name='second' value='second' />
+      </date-part-group>
+      <date-part-group>
+        <date-function name='DATETRUNC' />
         <part name='year' value='year' />
         <part name='quarter' value='quarter' />
         <part name='month' value='month' />
