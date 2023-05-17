@@ -1,1 +1,1 @@
-ClickHouse JDBC Connector by ANALYTIKA PLUS. 
+ClickHouse Tableau JDBC Connector.

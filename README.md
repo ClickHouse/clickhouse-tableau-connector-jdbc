@@ -1,48 +1,43 @@
-![](https://analytikaplus.ru/other-media/clickhouse-jdbc-header.png)
-# Tableau connector to ClickHouse using JDBC driver by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)
+# ClickHouse Tableau JDBC connector
 
+## Intro
 
-## What's it?
+This is an extension for Tableau Desktop / Tableau Server that simplifies the process of connecting Tableau to ClickHouse and extends support for standard Tableau functionality when working with ClickHouse (as compared to Generic ODBC/JDBC)
 
-An extension for Tableau Desktop / Tableau Server that simplifies the process of connecting Tableau to ClickHouse and extends support for standard Tableau functionality when working with ClickHouse (as compared to Generic ODBC/JDBC)
+## Features
 
-## What's the profit?
-
-- In comparison with **Other Databases (ODBC)**: This connector uses a JDBC driver, which is faster than the ODBC driver in some cases (for example, creating Extracts), and is also much easier to install than ODBC (a cross-platform jar file, does not require compilation for individual platforms).
-- In comparison with **Other Databases (JDBC)**: This connector has fine-tuning SQL queries to implement most of the standard Tableau functionality (including multiple JOINS in the data source, Sets, etc.) and has a friendly connection dialog ;)
-
-## Future plans
-- ~~Publishing the connector in [exchange.tableau.com](https://exchange.tableau.com/connectors)~~
+- In comparison with **Other Databases (ODBC)**: this connector uses the JDBC driver, which is faster than the ODBC driver in some cases (for example, creating Extracts), and is also much easier to install than ODBC (a cross-platform jar file, which does not require compiling for individual platforms).
+- In comparison with **Other Databases (JDBC)**: this connector has fine-tuning SQL queries to implement most of the standard Tableau functionality (including multiple JOINS in the data source, Sets, etc.), and it has a friendly connection dialog ;)
 
 ## Before you install
 
-- Make sure you...
-  - use Tableau **2020.4+**
-  - use ClickHouse **20.7+** (otherwise use [0.1.4 connector release](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases/tag/v0.1.4))
+Requirements
+- Tableau **2020.4+**
+- ClickHouse **20.7+**
 
-## How to install (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
+## Installation (Tableau Desktop)
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required), and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
-2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it to:
+2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/releases) page, and place it to:
     - macOS: `~/Documents/My Tableau Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Repository\Connectors`
 3. Run Tableau Desktop
-4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
+4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
-## How to install (Tableau Prep Builder)
+## Installation (Tableau Prep Builder)
 1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
-2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it to:
+2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/releases) page and place it to:
     - macOS: `~/Documents/My Tableau Prep Repository/Connectors`
     - Windows: `C:\Users\[Windows User]\Documents\My Tableau Prep Repository\Connectors`
 3. Run Tableau Prep Builder
-4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ANALYTIKA PLUS**
+4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
-## How to install (Tableau Server)
+## Installation (Tableau Server)
 1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-jdbc/releases/tag/v0.3.2-patch8) (version 0.3.2-patch8 required) and place the `clickhouse-jdbc-0.3.2-patch8-shaded.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
@@ -60,7 +55,7 @@ An extension for Tableau Desktop / Tableau Server that simplifies the process of
             ```
             sudo chmod 755 /opt/tableau/tableau_driver/jdbc/[driver file name].jar
             ```
-2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/analytikaplus/clickhouse-tableau-connector-jdbc/releases) page and place it into these folders on each node:
+2. Download the latest `clickhouse-jdbc.taco` from the [Releases](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/releases) page and place it into these folders on each node:
     - Linux: `/opt/tableau/connectors`
     - Windows: `C:\Program Files\Tableau\Connectors`
 3. Restart the server.
@@ -151,3 +146,10 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **`TO_TYPE_NAME([field])`** *(added in v0.2.1)* — Returns a string containing the ClickHouse type name of the passed argument. Equivalent of [`toTypeName()`](https://clickhouse.com/docs/en/sql-reference/functions/other-functions/#totypenamex).
 - **`TRUNC([my_float])`** — It is the same as the `FLOOR([my_float])` function. Equivalent of [`trunc()`](https://clickhouse.com/docs/en/sql-reference/functions/rounding-functions/#truncx-n-truncatex-n).
 - **`UNHEX([my_string])`** *(added in v0.2.1)* — Performs the opposite operation of `HEX()`. Equivalent of [`unhex()`](https://clickhouse.com/docs/en/sql-reference/functions/encoding-functions/#unhexstr).
+
+## Future plans
+- Publishing the connector at [exchange.tableau.com](https://exchange.tableau.com/connectors)
+
+## Acknowledgement
+
+Originally developed by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)
