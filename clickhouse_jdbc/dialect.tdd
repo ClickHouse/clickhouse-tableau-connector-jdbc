@@ -879,6 +879,11 @@
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='date' />
     </function>
+    <function group='aggregate' name='COUNTD_MERGE' return-type='int'>
+      <formula>uniqExactMerge(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='str' />
+    </function>
     <function group='aggregate' name='COUNTD_UNIQ' return-type='int'>
       <formula>uniq(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
@@ -908,6 +913,11 @@
       <formula>uniq(%1)</formula>
       <unagg-formula>isNotNull(%1)</unagg-formula>
       <argument type='date' />
+    </function>
+    <function group='aggregate' name='COUNTD_UNIQ_MERGE' return-type='int'>
+      <formula>uniqMerge(%1)</formula>
+      <unagg-formula>isNotNull(%1)</unagg-formula>
+      <argument type='str' />
     </function>
     <function group='aggregate' name='COVAR' return-type='real'>
       <formula>covarSamp(%1, %2)</formula>
