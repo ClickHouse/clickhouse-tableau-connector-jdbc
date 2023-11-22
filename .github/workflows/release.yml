@@ -1,0 +1,34 @@
+name: release
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Tableau Connector Plugin SDK 
+        uses: actions/checkout@v3
+        with:
+          repository: tableau/connector-plugin-sdk
+          ref: tableau-2023.2
+      - name: Checkout ClickHouse Tableau JDBC connector
+        uses: actions/checkout@v3
+        with:
+          path: clickhouse-tableau-jdbc
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Package the connector
+        working-directory: connector-packager
+        run: |
+          python -m venv .venv
+          source ./.venv/bin/activate
+          python setup.py install
+          python -m connector_packager.package clickhouse-tableau-jdbc/clickhouse_jdbc
+      - name: Upload the taco
+        uses: actions/upload-artifact@v2
+        with:
+          name: clickhouse_jdbc.taco
+          path: packaged-connector/clickhouse_jdbc*.taco
