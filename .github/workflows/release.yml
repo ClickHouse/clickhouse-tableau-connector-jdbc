@@ -31,5 +31,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: clickhouse_jdbc.taco
-          path: connector_packager/packaged-connector/clickhouse_jdbc*.taco
+          path: connector-packager/packaged-connector/clickhouse_jdbc*.taco
           if-no-files-found: error
