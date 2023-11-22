@@ -26,9 +26,9 @@ jobs:
           python -m venv .venv
           source ./.venv/bin/activate
           python setup.py install
-          python -m connector_packager.package clickhouse-tableau-jdbc/clickhouse_jdbc
+          python -m connector_packager.package ../clickhouse-tableau-jdbc/clickhouse_jdbc
       - name: Upload the taco
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: clickhouse_jdbc.taco
           path: packaged-connector/clickhouse_jdbc*.taco
