@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'oracle'
+          distribution: 'zulu'
 
       - name: Prepare for signing 
         working-directory: clickhouse-tableau-jdbc/signing_utility
