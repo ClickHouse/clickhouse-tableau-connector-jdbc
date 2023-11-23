@@ -35,8 +35,9 @@ jobs:
       - name: Set up Java for signing
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'liberica'
+          java-version: '11'
+          distribution: 'zulu'
+          java-package: 'jre'
 
       - name: Prepare for signing 
         working-directory: clickhouse-tableau-jdbc/signing_utility
