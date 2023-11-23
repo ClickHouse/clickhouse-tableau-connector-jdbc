@@ -12,14 +12,17 @@ jobs:
         with:
           repository: tableau/connector-plugin-sdk
           ref: tableau-2023.2
+
       - name: Checkout ClickHouse Tableau JDBC connector
         uses: actions/checkout@v3
         with:
           path: clickhouse-tableau-jdbc
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+
       - name: Package the connector
         working-directory: connector-packager
         run: |
@@ -27,9 +30,33 @@ jobs:
           source ./.venv/bin/activate
           python setup.py install
           python -m connector_packager.package ../clickhouse-tableau-jdbc/clickhouse_jdbc
+          echo "TACO_FILE=$(find "$PWD" -name 'clickhouse*.taco' | head -n 1)" >> $GITHUB_ENV
+
+      - name: Set up Java for signing
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Prepare for signing 
+        working-directory: clickhouse-tableau-jdbc/signing_utility
+        run: | 
+          cp ./smpkcs11.dylib /tmp/smpkcs11.dylib
+          echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > /tmp/Certificate_pkcs12.p12 
+          echo "SM_HOST=${{ secrets.SM_HOST }}" >> "$GITHUB_ENV" 
+          echo "SM_API_KEY=${{ secrets.SM_API_KEY }}" >> "$GITHUB_ENV" 
+          echo "SM_CLIENT_CERT_FILE=/tmp/Certificate_pkcs12.p12" >> "$GITHUB_ENV" 
+          echo "SM_CLIENT_CERT_PASSWORD=${{ secrets.SM_CLIENT_CERT_PASSWORD }}" >> "$GITHUB_ENV" 
+          echo "DIGICERT_KEY_ALIAS=${{ secrets.DIGICERT_KEY_ALIAS }}" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Sign binary
+        run: | 
+          jarsigner -keystore NONE  -storepass NONE -storetype PKCS11 -sigalg SHA256withRSA -providerClass sun.security.pkcs11.SunPKCS11 -providerArg pkcs11properties.cfg -signedjar  clickhouse_jdbc_signed.taco  $TACO_FILE $DIGICERT_KEY_ALIAS  -tsa  http://timestamp.digicert.com
+        shell: bash
+
       - name: Upload the taco
         uses: actions/upload-artifact@v3
         with:
-          name: clickhouse_jdbc.taco
-          path: connector-packager/packaged-connector/clickhouse_jdbc*.taco
+          name: clickhouse_jdbc_signed.taco
+          path: clickhouse-tableau-jdbc/signing_utility/clickhouse_jdbc_signed.taco
           if-no-files-found: error
