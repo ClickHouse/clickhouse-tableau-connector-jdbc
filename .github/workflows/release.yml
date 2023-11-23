@@ -37,7 +37,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'zulu'
-          java-package: 'jre'
 
       - name: Prepare for signing 
         working-directory: clickhouse-tableau-jdbc/signing_utility
@@ -49,6 +48,7 @@ jobs:
           echo "SM_CLIENT_CERT_FILE=/tmp/Certificate_pkcs12.p12" >> "$GITHUB_ENV" 
           echo "SM_CLIENT_CERT_PASSWORD=${{ secrets.SM_CLIENT_CERT_PASSWORD }}" >> "$GITHUB_ENV" 
           echo "DIGICERT_KEY_ALIAS=${{ secrets.DIGICERT_KEY_ALIAS }}" >> "$GITHUB_ENV"
+          ls /tmp
         shell: bash
 
       - name: Sign binary
