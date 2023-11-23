@@ -35,7 +35,7 @@ jobs:
       - name: Set up Java for signing
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'oracle'
 
       - name: Prepare for signing 
