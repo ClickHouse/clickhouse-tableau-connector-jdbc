@@ -4,16 +4,32 @@
     <validation-rule reg-exp='^(([a-zA-Z0-9\-]|[a-zA-Z0-9\-][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9\-]|[A-Za-z0-9\-][A-Za-z0-9\-]*[A-Za-z0-9])$'/>
   </field>
   <field name='port' label='Port' category='endpoint' value-type='string' default-value=''/>
-  <field name='authentication' label='Authentication' category='authentication' value-type='string' editable='false' default-value='auth-user-pass'/>
-  <field name='username' label='Username' category='authentication' value-type='string'/>
-  <field name='password' label='Password' category='authentication' value-type='string' secure='true' optional='true'/>
+
+  <field name="authentication" label="Authentication" category="authentication" value-type="selection" >
+    <selection-group>
+      <option value="auth-integrated" label="Kerberos"/>
+      <option value="auth-user-pass" label="Username and Password"/>
+    </selection-group>
+  </field>
+
+  <field name="username" label="Username" category="authentication" value-type="string">
+    <conditions>
+      <condition field="authentication" value="auth-user-pass"/>
+    </conditions>
+  </field>
+  <field name="password" label="Password" category="authentication" value-type="string" secure="true" optional='true'>
+    <conditions>
+      <condition field="authentication" value="auth-user-pass"/>
+    </conditions>
+  </field>
+
   <field name='sslmode' label='SSL' value-type='boolean' category='general' default-value=''>
     <boolean-options>
       <false-value value=''/>
       <true-value value='require'/>
     </boolean-options>
   </field>
-  <field name='v-custom-connection-params' label='Custom Connection Parameters (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true' default-value='socket_timeout=300000'>
+  <field name='v-custom-connection-params' label='Custom Connection Parameters (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true' default-value='socket_timeout=300000,databaseTerm=schema'>
     <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+,)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+))?)$'/>
   </field>
   <field name='v-custom-http-params' label='JDBC Driver custom_http_params (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true'>
@@ -31,4 +47,5 @@
       <true-value value='true'/>
     </boolean-options>
   </field>
+  <field name='v-kerb-server-name' label='Kerberos Server Name' category='advanced' value-type='string' default-value='HTTP'/>
 </connection-fields>

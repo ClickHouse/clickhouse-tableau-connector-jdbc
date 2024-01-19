@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <dialect name='ClickHouse'
-         class='clickhouse_jdbc'
+         class='clickhouse_jdbc_gss'
          base='PostgreSQL90Dialect'
          version='18.1'>
     <function-map>

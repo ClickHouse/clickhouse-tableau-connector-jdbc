@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.2.6' name='ClickHouse JDBC' version='18.1' min-version-tableau='2020.4'>
+<connector-plugin class='clickhouse_jdbc_gss' superclass='jdbc' plugin-version='0.2.6.1' name='ClickHouse JDBC with GSS' version='18.1' min-version-tableau='2020.4'>
   <vendor-information>
-    <company name='ClickHouse, Inc.'/>
-    <support-link url='https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/issues'/>
-    <driver-download-link url='https://github.com/ClickHouse/clickhouse-jdbc/releases'/>
+    <company name='GetInData'/>
+    <support-link url='https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/issues'/> <!-- TODO -->
+    <driver-download-link url='https://github.com/ClickHouse/clickhouse-jdbc/releases'/> <!-- TODO -->
   </vendor-information>
-  <connection-customization class='clickhouse_jdbc' enabled='true' version='10.0'>
+  <connection-customization class='clickhouse_jdbc_gss' enabled='true' version='10.0'>
     <vendor name='vendor'/>
     <driver name='driver'/>
     <customizations>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<tdr class='clickhouse_jdbc'>
+<tdr class='clickhouse_jdbc_gss'>
 	<connection-resolver>
     <connection-builder>
       <script file='connectionBuilder.js'/>
@@ -19,6 +19,7 @@
           <attr>v-custom-type-mappings</attr>
           <attr>v-custom-url-params</attr>
           <attr>v-set-session-id</attr>
+          <attr>v-kerb-server-name</attr>
         </attribute-list>
       </required-attributes>
     </connection-normalizer>
