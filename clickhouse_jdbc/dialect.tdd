@@ -190,6 +190,11 @@
       <argument type='real' />
       <argument type='int' />
     </function>
+    <function group='numeric' name='ROUND' return-type='real'>
+      <formula>ROUND(CAST(%1 as Nullable(Double)), cast(%2 as Integer))</formula>
+      <argument type='real' />
+      <argument type='real' />
+    </function>
     <function group='numeric' name='SIGN' return-type='int'>
       <formula>SIGN(%1)</formula>
       <argument type='real' />
