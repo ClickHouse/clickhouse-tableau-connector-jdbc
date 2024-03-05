@@ -1938,7 +1938,7 @@
       <formula part='dayofyear'>CAST(dateName('dayofyear',%2) AS Nullable(String))</formula>
       <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
       <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
-      <formula part='week'>CAST(dateName('week',toStartOfWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END))) AS Nullable(String))</formula>
+      <formula part='week'>CAST(toWeek(%2, (CASE WHEN %3=0 THEN 8 WHEN %3=1 THEN 9 ELSE 8 END)) AS Nullable(String))</formula>
       <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
       <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
       <formula part='second'>CAST(dateName('second',%2) AS Nullable(String))</formula>
