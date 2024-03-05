@@ -1890,7 +1890,7 @@
       <formula part='day'>CAST(dateName('day',%2) AS Nullable(String))</formula>
       <formula part='weekday'>CAST(dateName('weekday',%2) AS Nullable(String))</formula>
       <formula part='iso-weekday'>CAST(toDayOfWeek(%2) AS Nullable(String))</formula>
-      <formula part='week'>CAST(dateName('week', toStartOfWeek(%2, 8)) AS Nullable(String))</formula>
+      <formula part='week'>CAST(toWeek(%2, 8) AS Nullable(String))</formula>
       <formula part='iso-week'>CAST(toISOWeek(%2) AS Nullable(String))</formula>
       <formula part='hour'>CAST(dateName('hour',%2) AS Nullable(String))</formula>
       <formula part='minute'>CAST(dateName('minute',%2) AS Nullable(String))</formula>
