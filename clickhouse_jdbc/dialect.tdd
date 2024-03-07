@@ -433,11 +433,11 @@
       <argument type='str' />
     </function>
     <function group='string' name='SPACE' return-type='str'>
-      <formula>CASE WHEN ISNULL(%1) OR %1 &lt; 0 THEN NULL&#10; CASE WHEN %1 = 0 THEN ''&#10; ELSE repeat(&apos; &apos;, CAST(%1 AS Nullable(UInt8))) END</formula>
+      <formula>multiIf(isNull(%1) OR (%1 &lt; 0), NULL, %1 == 0, '', repeat(' ', toUInt8(%1)))</formula>
       <argument type='real' />
     </function>
     <function group='string' name='SPACE' return-type='str'>
-      <formula>CASE WHEN ISNULL(%1) OR %1 &lt; 0 THEN NULL&#10; CASE WHEN %1 = 0 THEN ''&#10; ELSE repeat(&apos; &apos;, CAST(%1 AS Nullable(UInt8))) END</formula>
+      <formula>multiIf(isNull(%1) OR (%1 &lt; 0), NULL, %1 == 0, '', repeat(' ', toUInt8(%1)))</formula>
       <argument type='int' />
     </function>
     <function group='string' name='SPLIT' return-type='str'>
