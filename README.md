@@ -150,6 +150,9 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 ## Future plans
 - Publishing the connector at [exchange.tableau.com](https://exchange.tableau.com/connectors)
 
+## Tests
+The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt), and currently maintains a 97% coverage ration.
+
 ## Acknowledgement
 
 Originally developed by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)
