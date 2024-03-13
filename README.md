@@ -80,7 +80,7 @@ In 99% of cases you don't need the Advanced tab, for the remaining 1% you can us
     Read more about mapping in the corresponding section
 
 - **JDBC Driver URL Parameters**. You can pass the remaining [driver parameters](https://github.com/ClickHouse/clickhouse-jdbc#configuration), for example `jdbcCompliance`, in this field. Be careful, the parameter values must be passed in the URL Encoded format, and in the case of passing `custom_http_params` or `typeMappings` in this field and in the previous fields of the Advanced tab, the values of the preceding two fields on the Advanced tab have a higher priority
-- **Set Session ID** checkbox. It is needed to set session level settings in Initial SQL tab, generates a `session_id` with a timestamp and a pseudo-random number in the format "tableau-jdbc-connector-*{timestamp}*-*{number}*"
+- **Set Session ID** checkbox. It is needed to set session-level settings in Initial SQL tab, generates a `session_id` with a timestamp and a pseudo-random number in the format "tableau-jdbc-connector-*{timestamp}*-*{number}*"
 ### Limited support for UInt64, Int128, (U)Int256 data types
 By default, the driver displays fields of types *UInt64, Int128, (U)Int256* as strings, **but it displays, not converts**. This means that when you try to write the next calculated field, you will get an error
 ```
@@ -125,10 +125,10 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **`GET_SETTING([my_setting_name])`** *(added in v0.2.1)* — Returns the current value of a custom setting. Equivalent of [`getSetting()`](https://clickhouse.com/docs/en/sql-reference/functions/other-functions/#getSetting).
 - **`HEX([my_string])`** *(added in v0.2.1)* — Returns a string containing the argument’s hexadecimal representation. Equivalent of [`hex()`](https://clickhouse.com/docs/en/sql-reference/functions/encoding-functions/#hex).
 - **`KURTOSIS([my_number])`** — Computes the sample kurtosis of a sequence. Equivalent of [`kurtSamp()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/kurtsamp/#kurtsamp).
-- **`KURTOSISP([my_number])`** — Computes the kurtosis of a sequence. Equivalent of [`kurtPop()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/kurtpop/#kurtpop).
+- **`KURTOSISP([my_number])`** — Computes the kurtosis of a sequence. The equivalent of [`kurtPop()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/kurtpop/#kurtpop).
 - **`MEDIAN_EXACT([my_number])`** *(added in v0.1.3)* — Exactly computes the median of a numeric data sequence. Equivalent of [`quantileExact(0.5)(...)`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/#quantileexact).
 - **`MOD([my_number_1], [my_number_2])`** — Calculates the remainder after division. If arguments are floating-point numbers, they are pre-converted to integers by dropping the decimal portion. Equivalent of [`modulo()`](https://clickhouse.com/docs/en/sql-reference/functions/arithmetic-functions/#modulo).
-- **`PERCENTILE_EXACT([my_number], [level_float])`** *(added in v0.1.3)* — Exactly computes the percentile of a numeric data sequence. Recommended level range is [0.01, 0.99]. Equivalent of [`quantileExact()()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/#quantileexact).
+- **`PERCENTILE_EXACT([my_number], [level_float])`** *(added in v0.1.3)* — Exactly computes the percentile of a numeric data sequence. The recommended level range is [0.01, 0.99]. Equivalent of [`quantileExact()()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/#quantileexact).
 - **`PROPER([my_string])`** *(added in v0.2.5)* - Converts a text string so the first letter of each word is capitalized and the remaining letters are in lowercase. Spaces and non-alphanumeric characters such as punctuation also act as separators. For example:
     ```
     PROPER("PRODUCT name") => "Product Name"
@@ -140,7 +140,7 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **`RANDOM()`** *(added in v0.2.1)* — unofficial [`RANDOM()`](https://kb.tableau.com/articles/issue/random-function-produces-inconsistent-results) Tableau function, which returns float between 0 and 1.
 - **`RAND_CONSTANT([optional_field])`** *(added in v0.2.1)* — Produces a constant column with a random value. Something like `{RAND()}` Fixed LOD, but faster. Equivalent of [`randConstant()`](https://clickhouse.com/docs/en/sql-reference/functions/random-functions/#randconstant).
 - **`REAL([my_number])`** — Casts field to float (Float64). Details [`here`](https://clickhouse.com/docs/en/sql-reference/data-types/decimal/#operations-and-result-type).
-- **`SHA256([my_string])`** *(added in v0.2.1)* — Calculates SHA-256 hash from a string and returns the resulting set of bytes as string (FixedString). Convenient to use with the `HEX()` function, for example, `HEX(SHA256([my_string]))`. Equivalent of [`SHA256()`](https://clickhouse.com/docs/en/sql-reference/functions/hash-functions/#sha).
+- **`SHA256([my_string])`** *(added in v0.2.1)* — Calculates SHA-256 hash from a string and returns the resulting set of bytes as a string (FixedString). Convenient to use with the `HEX()` function, for example, `HEX(SHA256([my_string]))`. Equivalent of [`SHA256()`](https://clickhouse.com/docs/en/sql-reference/functions/hash-functions/#sha).
 - **`SKEWNESS([my_number])`** — Computes the sample skewness of a sequence. Equivalent of [`skewSamp()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/skewsamp/#skewsamp).
 - **`SKEWNESSP([my_number])`** — Computes the skewness of a sequence. Equivalent of [`skewPop()`](https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/skewpop/#skewpop).
 - **`TO_TYPE_NAME([field])`** *(added in v0.2.1)* — Returns a string containing the ClickHouse type name of the passed argument. Equivalent of [`toTypeName()`](https://clickhouse.com/docs/en/sql-reference/functions/other-functions/#totypenamex).
@@ -151,7 +151,7 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - Publishing the connector at [exchange.tableau.com](https://exchange.tableau.com/connectors)
 
 ## Tests
-The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt), and currently maintains a 97% coverage ration.
+The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
 ## Acknowledgement
 
