@@ -16,7 +16,7 @@ Requirements
 - ClickHouse **20.7+**
 
 ## Installation (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.6.0) (version 0.6.0 required), and place the `clickhouse-jdbc-0.6.0-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.4.6) (version 0.4.6 required), and place the `clickhouse-jdbc-0.4.6-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -27,7 +27,7 @@ Requirements
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Prep Builder)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.6.0) (version 0.6.0 required) and place the `clickhouse-jdbc-0.6.0-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.4.6) (version 0.4.6 required) and place the `clickhouse-jdbc-0.4.6-shaded.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -38,7 +38,7 @@ Requirements
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Server)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.6.0) (version 0.6.0 required) and place the `clickhouse-jdbc-0.6.0-shaded.jar` to:
+1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases/tag/v0.4.6) (version 0.4.6 required) and place the `clickhouse-jdbc-0.4.6-shaded.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
