@@ -2230,5 +2230,6 @@
       BalancedIIF
     -->
     <format-simple-case value='BalancedIIF' />
+    <format-string-literal value='Standard'/>
   </sql-format>
 </dialect>
