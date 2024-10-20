@@ -13,16 +13,10 @@
       <true-value value='require'/>
     </boolean-options>
   </field>
-  <field name='v-custom-connection-params' label='Custom Connection Parameters (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true' default-value='socket_timeout=300000'>
-    <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+,)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+))?)$'/>
-  </field>
   <field name='v-custom-http-params' label='JDBC Driver custom_http_params (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true'>
     <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+,)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+))?)$'/>
   </field>
   <field name='v-custom-type-mappings' label='JDBC Driver typeMappings (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true'>
-    <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+,)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+))?)$'/>
-  </field>
-  <field name='v-custom-url-params' label='JDBC Driver URL Parameters (key1=value1,key2=value2)' category='advanced' value-type='string' optional='true'>
     <validation-rule reg-exp='^((([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+,)*([a-zA-Z0-9\_]+=[a-zA-Z0-9\_\-\.\/\@\*\%]+))?)$'/>
   </field>
   <field name='v-set-session-id' label='Set Session ID (allow for setting Session Parameters in the Initial SQL)' value-type='boolean' category='advanced' default-value='true'>
