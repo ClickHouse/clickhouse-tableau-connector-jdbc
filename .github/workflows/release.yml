@@ -57,7 +57,7 @@ jobs:
         shell: bash
 
       - name: Upload the taco
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: clickhouse_jdbc_signed.taco
           path: clickhouse-tableau-jdbc/signing_utility/clickhouse_jdbc_signed.taco
