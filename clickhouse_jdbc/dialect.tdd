@@ -102,22 +102,22 @@
       <argument type='real' />
     </function>
     <function group='numeric' name='MAX' return-type='real'>
-      <formula>GREATEST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, GREATEST(%1, %2))</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
     <function group='numeric' name='MAX' return-type='int'>
-      <formula>GREATEST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, GREATEST(%1, %2))</formula>
       <argument type='int' />
       <argument type='int' />
     </function>
     <function group='numeric' name='MIN' return-type='real'>
-      <formula>LEAST(%1,%2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, LEAST(%1, %2))</formula>
       <argument type='real' />
       <argument type='real' />
     </function>
     <function group='numeric' name='MIN' return-type='int'>
-      <formula>LEAST(%1,%2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, LEAST(%1, %2))</formula>
       <argument type='int' />
       <argument type='int' />
     </function>
@@ -346,7 +346,7 @@
       <argument type='str' />
     </function>
     <function group='string' name='MAX' return-type='str'>
-      <formula>GREATEST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, GREATEST(%1, %2))</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
@@ -373,7 +373,7 @@
       <argument type='int' />
     </function>
     <function group='string' name='MIN' return-type='str'>
-      <formula>LEAST(%1,%2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, LEAST(%1, %2))</formula>
       <argument type='str' />
       <argument type='str' />
     </function>
@@ -1733,22 +1733,22 @@
       <argument type='datetime' />
     </function>
     <function group='date' name='MAX' return-type='datetime'>
-      <formula>GREATEST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, GREATEST(%1, %2))</formula>
       <argument type='datetime' />
       <argument type='datetime' />
     </function>
     <function group='date' name='MAX' return-type='date'>
-      <formula>GREATEST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, GREATEST(%1, %2))</formula>
       <argument type='date' />
       <argument type='date' />
     </function>
     <function group='date' name='MIN' return-type='datetime'>
-      <formula>LEAST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, LEAST(%1, %2))</formula>
       <argument type='datetime' />
       <argument type='datetime' />
     </function>
     <function group='date' name='MIN' return-type='date'>
-      <formula>LEAST(%1, %2)</formula>
+      <formula>if(or(%1 IS NULL, %2 IS NULL), NULL, LEAST(%1, %2))</formula>
       <argument type='date' />
       <argument type='date' />
     </function>
