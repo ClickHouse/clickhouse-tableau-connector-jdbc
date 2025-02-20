@@ -53,7 +53,7 @@
     props['custom_http_params'] = customHttpParamsArr.join(',');
     props['typeMappings'] = typeMappingsArr.join(',');
     props['socket_timeout'] = 300000;
-
+    props['databaseTerm'] = "schema";
 
     // ------------------------------------------------------------------------------------------------------------------------------------------
 
