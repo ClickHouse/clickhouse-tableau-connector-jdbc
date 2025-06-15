@@ -2231,5 +2231,6 @@
     -->
     <format-simple-case value='BalancedIIF' />
     <format-string-literal value='Standard'/>
+    <id-allowed-characters value='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_' />
   </sql-format>
 </dialect>
