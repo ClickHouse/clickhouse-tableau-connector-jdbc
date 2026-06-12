@@ -1,75 +1,64 @@
 (function dsbuilder(attr) {
-    // setting custom HTTP parameterss
-    var customHttpParams = {};
+    // Splits "k1=v1,k2=v2" on the FIRST '=' of each item, so values may
+    // contain '='. Pairs with an empty key or value are skipped: jdbc-v2
+    // parseUrl() throws SQLException on empty URL parameter keys/values.
+    function parseKeyValueList(str) {
+        var pairs = [];
+        if (!str || str.length === 0) {
+            return pairs;
+        }
+        var items = str.split(',');
+        for (var i = 0; i < items.length; i++) {
+            var eq = items[i].indexOf('=');
+            if (eq < 0) {
+                continue;
+            }
+            var key = items[i].substring(0, eq).replace(/^\s+|\s+$/g, '');
+            var value = items[i].substring(eq + 1).replace(/^\s+|\s+$/g, '');
+            if (key.length === 0 || value.length === 0) {
+                continue;
+            }
+            pairs.push([key, value]);
+        }
+        return pairs;
+    }
+
+    // Single params object: later assignments override earlier ones
+    var params = {};
 
     // fix IN/OUT Top-N Sets
-    customHttpParams['join_use_nulls'] = 1;
+    params['clickhouse_setting_join_use_nulls'] = '1';
 
-    // parsing custom_http_params
-    if(attr['v-custom-http-params'] && attr['v-custom-http-params'].length > 0){
-        var customParams = attr['v-custom-http-params'].split(',');
-        for(var i = 0; i < customParams.length; i++){
-            var param = customParams[i].split('=');
-            customHttpParams[param[0]] = param[1];
-        }
-    }
-    
-    // setting session_id
-    if(attr['v-set-session-id'] == "true"){
-        customHttpParams['session_id'] = "tableau-jdbc-connector-" + Date.now() + "-" + Math.floor(Math.random() * (Math.floor(10000000) - Math.ceil(1) + 1)) + Math.ceil(1);
+    // session_id is sent with every HTTP request by the driver, which gives
+    // a real server session, so Initial SQL "SET x=y" affects the connection
+    if (attr['v-set-session-id'] == 'true') {
+        params['clickhouse_setting_session_id'] = 'tableau-jdbc-connector-' + Date.now() + '-'
+            + (Math.floor(Math.random() * (Math.floor(10000000) - Math.ceil(1) + 1)) + Math.ceil(1));
     }
 
-    var customHttpParamsArr = [];
-    for (var key in customHttpParams){
-        customHttpParamsArr.push(key + "=" + customHttpParams[key]);
+    // ClickHouse server settings: each key becomes clickhouse_setting_<key>,
+    // keeping the semantics of the old V1 custom_http_params field
+    var serverSettings = parseKeyValueList(attr['v-custom-http-params']);
+    for (var i = 0; i < serverSettings.length; i++) {
+        params['clickhouse_setting_' + serverSettings[i][0]] = serverSettings[i][1];
     }
 
-    // preparing customUrlParams
-    var customUrlParams = {};
-
-    if(attr['v-custom-url-params'] && attr['v-custom-url-params'].length > 0){
-        var customParams = attr['v-custom-url-params'].split(',');
-        for(var i = 0; i < customParams.length; i++){
-            var param = customParams[i].split('=');
-            customUrlParams[param[0]] = param[1];
-        }
+    // raw JDBC URL parameters go last, so an explicit
+    // clickhouse_setting_session_id here overrides the checkbox above
+    var urlParams = parseKeyValueList(attr['v-custom-url-params']);
+    for (var j = 0; j < urlParams.length; j++) {
+        params[urlParams[j][0]] = urlParams[j][1];
     }
 
-    // default type mappings
-    typeMappings = {'UInt64': 'java.lang.String',
-                    'UInt128': 'java.lang.String',
-                    'Int128': 'java.lang.String',
-                    'UInt256': 'java.lang.String',
-                    'Int256': 'java.lang.String'};
-
-    // setting custom type mappings
-    if(attr['v-custom-type-mappings'] && attr['v-custom-type-mappings'].length > 0){
-        var customTypeMappings = attr['v-custom-type-mappings'].split(',');
-        for(var i in customTypeMappings){
-            var customTypeMapping = customTypeMappings[i].split('=');
-            typeMappings[customTypeMapping[0]] = customTypeMapping[1];
-        }
+    var paramsArr = [];
+    for (var key in params) {
+        paramsArr.push(key + '=' + encodeURIComponent(params[key]));
     }
 
-    var typeMappingsArr = [];
-    for (var key in typeMappings){
-        typeMappingsArr.push(key + "=" + typeMappings[key]);
+    var hostPort = attr['server'];
+    if (attr['port'] && attr['port'].length > 0) {
+        hostPort += ':' + attr['port'];
     }
 
-    // updating some URL params
-    customUrlParams['custom_http_params'] = customHttpParamsArr.join(',');
-    customUrlParams['typeMappings'] = typeMappingsArr.join(',');
-
-    // building encoded URL params string
-    var customUrlParamsArr = [];
-    for (var key in customUrlParams){
-        customUrlParamsArr.push(key + "=" + encodeURIComponent(customUrlParams[key]));
-    }
-
-    var customUrlParamsString = customUrlParamsArr.join('&');
-
-    // building full URL string
-    var urlBuilder = "jdbc:clickhouse://" + attr['server'] + ":" + attr['port']
-        + "/?" + customUrlParamsString;
-    return [urlBuilder];
+    return ['jdbc:clickhouse://' + hostPort + '/?' + paramsArr.join('&')];
 })

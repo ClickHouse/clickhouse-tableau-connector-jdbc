@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='0.3.1' name='ClickHouse JDBC' version='18.1' min-version-tableau='2020.4'>
+<connector-plugin class='clickhouse_jdbc' superclass='jdbc' plugin-version='1.0.0' name='ClickHouse JDBC' version='18.1' min-version-tableau='2024.2'>
   <vendor-information>
     <company name='ClickHouse, Inc.'/>
     <support-link url='https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/issues'/>
-    <driver-download-link url='https://github.com/ClickHouse/clickhouse-jdbc/releases'/>
+    <driver-download-link url='https://github.com/ClickHouse/clickhouse-java/releases'/>
   </vendor-information>
   <connection-customization class='clickhouse_jdbc' enabled='true' version='10.0'>
     <vendor name='vendor'/>
