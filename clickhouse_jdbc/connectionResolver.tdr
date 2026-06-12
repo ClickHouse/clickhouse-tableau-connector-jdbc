@@ -16,7 +16,6 @@
           <attr>sslmode</attr>
           <attr>v-custom-connection-params</attr>
           <attr>v-custom-http-params</attr>
-          <attr>v-custom-type-mappings</attr>
           <attr>v-custom-url-params</attr>
           <attr>v-set-session-id</attr>
         </attribute-list>

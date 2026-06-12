@@ -578,7 +578,7 @@
       <argument type='datetime' />
     </function>
     <function group='cast' name='MAKETIME' return-type='datetime'>
-      <formula>toTime(addSeconds(addMinutes(addHours(DATE '1970-01-02', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER))))</formula>
+      <formula>toTimeWithFixedDate(addSeconds(addMinutes(addHours(DATE '1970-01-02', CAST(%1 AS Nullable(INTEGER))), CAST(%2 AS Nullable(INTEGER))), CAST(%3 AS Nullable(INTEGER))))</formula>
       <argument type='int' />
       <argument type='int' />
       <argument type='int' />
