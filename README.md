@@ -85,7 +85,10 @@ Internally distributed builds of this connector are not signed with a DigiCert c
 If the *Set Session ID* checkbox is activated on the Advanced tab (by default), feel free to set session level [settings](https://clickhouse.com/docs/en/operations/settings/settings/) using
 ```
 SET my_setting=value;
-``` 
+```
+> **Migration note: `USE my_database;` in Initial SQL no longer works.** The JDBC V2 driver sends an explicit database with every request, which overrides the session's current database set by `USE`. Instead, the database you pick in the Tableau UI is now applied to the connection automatically (so unqualified tables in Custom SQL resolve there), or set it explicitly with `database=my_database` in *JDBC driver properties* on the Advanced tab.
+### Default database for Custom SQL
+The **Database** you select on the data source page becomes the default database of the connection. Unqualified table names in *New Custom SQL* resolve against it. To use a different database, either qualify tables (`my_db.my_table`) or pass `database=my_db` in *JDBC driver properties* (it overrides the UI selection).
 ### Advanced tab
 
 
@@ -158,6 +161,7 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **A typo in *JDBC driver properties* silently does nothing.** With the default `ignore_unknown_config_key=true`, the driver logs `Unknown and unmapped config properties` as WARN in `jprotocolserver.log` (in *My Tableau Repository/Logs*) instead of failing. Pass `ignore_unknown_config_key=false` in the *JDBC driver properties* field to surface such errors at connection time.
 - **`SESSION_IS_LOCKED` errors.** A ClickHouse session allows only one running query at a time. The connector intentionally does not advertise query cancellation support (`KILL QUERY` from the same session would lock itself out), but if you see this error with parallel queries, untick the *Set Session ID* checkbox (this disables `SET` statements in Initial SQL).
 - **Connection fails for a `readonly=1` account.** Not fixable on the connector side — the JDBC V2 driver sends server settings with every request. Ask your DBA for a `readonly=2` profile.
+- **`Unknown table expression identifier` in Custom SQL.** The table is not in the connection's default database. Select the right **Database** on the data source page (it is applied to the connection), qualify the table name (`my_db.my_table`), or pass `database=my_db` in *JDBC driver properties*. Note that `USE my_db;` in Initial SQL does **not** work with the V2 driver.
 
 ## Tests
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.

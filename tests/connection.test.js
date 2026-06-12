@@ -146,6 +146,24 @@ test('custom connection params are applied and may override defaults', function 
     assert.strictEqual(props['ignore_unknown_config_key'], 'false');
 });
 
+test('schema picked in the UI becomes the connection database', function () {
+    var props = propertiesbuilder({ schema: 'hily_analytics' });
+    assert.strictEqual(props['database'], 'hily_analytics');
+});
+
+test('empty or missing schema sets no database property', function () {
+    assert.strictEqual(propertiesbuilder({ schema: '' })['database'], undefined);
+    assert.strictEqual(propertiesbuilder({})['database'], undefined);
+});
+
+test('explicit database= in custom params overrides the UI schema', function () {
+    var props = propertiesbuilder({
+        schema: 'hily_analytics',
+        'v-custom-connection-params': 'database=other_db'
+    });
+    assert.strictEqual(props['database'], 'other_db');
+});
+
 if (failures > 0) {
     console.error('\n' + failures + ' test(s) failed');
     process.exit(1);

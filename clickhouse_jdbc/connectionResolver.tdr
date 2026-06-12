@@ -14,6 +14,7 @@
           <attr>username</attr>
           <attr>password</attr>
           <attr>sslmode</attr>
+          <attr>schema</attr>
           <attr>v-custom-connection-params</attr>
           <attr>v-custom-http-params</attr>
           <attr>v-custom-url-params</attr>
