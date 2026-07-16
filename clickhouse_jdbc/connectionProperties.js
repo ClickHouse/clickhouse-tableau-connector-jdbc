@@ -15,7 +15,6 @@
    
     if (attr["sslmode"] == "require") {
         props["ssl"] = "true";
-        props["sslmode"] = "STRICT";
     }
 
     return props;
