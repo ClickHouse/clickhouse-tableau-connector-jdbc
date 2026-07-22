@@ -54,6 +54,9 @@
     props['typeMappings'] = typeMappingsArr.join(',');
     props['socket_timeout'] = 300000;
 
+    // identify Tableau in the user agent (client_name is prepended to the driver user agent, and shows up in system.query_log.http_user_agent)
+    props['client_name'] = 'Tableau';
+
 
     // ------------------------------------------------------------------------------------------------------------------------------------------
 

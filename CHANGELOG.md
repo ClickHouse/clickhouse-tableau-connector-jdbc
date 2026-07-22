@@ -2,3 +2,4 @@
 ### Improvements
 - Allow a close-set of characters to be used as column names by the connector
 - Fix null values when using greatest and least functions ([#89](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/pull/89))
+- Identify Tableau in the HTTP user agent sent to ClickHouse (`client_name=Tableau`, visible in `system.query_log.http_user_agent`)
