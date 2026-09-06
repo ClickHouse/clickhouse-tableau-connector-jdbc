@@ -15,8 +15,13 @@ Requirements
 - Tableau **2020.4+**
 - ClickHouse **20.7+**
 
+### Recommended: install from Tableau Exchange
+The connector is certified by Tableau and published on the [Tableau Exchange](https://exchange.tableau.com/connectors). Installing it from there is the recommended way to get the connector: search for **ClickHouse**, and Tableau will download and install the connector for you. You still need to install the ClickHouse JDBC driver manually, as described in step 1 of the relevant section below.
+
+Use the distribution from this repository's [Releases](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/releases) page if you want a connector version other than the latest one listed in the Tableau Exchange, or if you cannot use the Tableau Exchange (for example, in an offline environment). The manual installation steps below describe how to do that.
+
 ## Installation (Tableau Desktop)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) (version 0.8.X required), and place the `clickhouse-jdbc-0.8.X-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -27,7 +32,7 @@ Requirements
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Prep Builder)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) (version 0.8.X required), and place the `clickhouse-jdbc-0.8.X-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -38,7 +43,7 @@ Requirements
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Server)
-1. Download the [Clickhouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) (version 0.8.X required), and place the `clickhouse-jdbc-0.8.X-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
@@ -151,9 +156,6 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 - **`TO_TYPE_NAME([field])`** *(added in v0.2.1)* — Returns a string containing the ClickHouse type name of the passed argument. Equivalent of [`toTypeName()`](https://clickhouse.com/docs/en/sql-reference/functions/other-functions/#totypenamex).
 - **`TRUNC([my_float])`** — It is the same as the `FLOOR([my_float])` function. Equivalent of [`trunc()`](https://clickhouse.com/docs/en/sql-reference/functions/rounding-functions/#truncx-n-truncatex-n).
 - **`UNHEX([my_string])`** *(added in v0.2.1)* — Performs the opposite operation of `HEX()`. Equivalent of [`unhex()`](https://clickhouse.com/docs/en/sql-reference/functions/encoding-functions/#unhexstr).
-
-## Future plans
-- Publishing the connector at [exchange.tableau.com](https://exchange.tableau.com/connectors)
 
 ## Tests
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
