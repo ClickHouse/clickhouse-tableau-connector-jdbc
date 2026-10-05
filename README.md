@@ -21,7 +21,7 @@ The connector is certified by Tableau and published on the [Tableau Exchange](ht
 Use the distribution from this repository's [Releases](https://github.com/ClickHouse/clickhouse-tableau-connector-jdbc/releases) page if you want a connector version other than the latest one listed in the Tableau Exchange, or if you cannot use the Tableau Exchange (for example, in an offline environment). The manual installation steps below describe how to do that.
 
 ## Installation (Tableau Desktop)
-1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-all-dependencies.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -32,7 +32,7 @@ Use the distribution from this repository's [Releases](https://github.com/ClickH
 4. In Tableau Desktop: **Connect** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Prep Builder)
-1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-all-dependencies.jar` to:
     - macOS: `~/Library/Tableau/Drivers`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the folder if it doesn't already exist
@@ -43,7 +43,7 @@ Use the distribution from this repository's [Releases](https://github.com/ClickH
 4. In Tableau Prep Builder: **Connections** ➔ **+** ➔ **To a Server** ➔ **ClickHouse JDBC by ClickHouse, Inc.**
 
 ## Installation (Tableau Server)
-1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-shaded-all.jar` to:
+1. Download the latest [ClickHouse JDBC Driver](https://github.com/ClickHouse/clickhouse-java/releases) release, and place the `clickhouse-jdbc-<version>-all-dependencies.jar` to:
     - Linux: `/opt/tableau/tableau_driver/jdbc`
     - Windows: `C:\Program Files\Tableau\Drivers`
     - You need to create the directory if it doesn't already exist
