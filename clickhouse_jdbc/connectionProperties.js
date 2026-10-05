@@ -54,6 +54,18 @@
     props['typeMappings'] = typeMappingsArr.join(',');
     props['socket_timeout'] = 300000;
 
+    // identify Tableau in the user agent (client_name is prepended to the driver user agent, and shows up in system.query_log.http_user_agent)
+    // connectionHelper.GetProductName/GetProductVersion exist since Tableau 2022.1, e.g. "TableauDesktop/2024.2"
+    var clientName = 'Tableau';
+    if (typeof connectionHelper !== 'undefined' && typeof connectionHelper.GetProductName === 'function') {
+        clientName = connectionHelper.GetProductName() + '/' + connectionHelper.GetProductVersion();
+    }
+    props['client_name'] = clientName;
+
+    // JDBC driver 0.9+ rejects properties it does not recognize (e.g. typeMappings, which only the v1 driver supports);
+    // downgrade that to a warning so the connector keeps working across driver versions
+    props['ignore_unknown_config_key'] = 'true';
+
 
     // ------------------------------------------------------------------------------------------------------------------------------------------
 
