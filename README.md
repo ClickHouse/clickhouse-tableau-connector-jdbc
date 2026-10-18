@@ -155,6 +155,16 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 ## Tests
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
+Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which starts the suite in
+ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release,
+and reports the result as a check. PRs from forks wait for a maintainer to approve each commit (the
+`tdvt-external` environment). It can also be run by hand from the Actions tab with any branch, tag or SHA.
+
+Setup: a GitHub App installed on clickhouse-tableau-tdvt with **Actions: read & write**, stored here as
+the `TDVT_APP_ID` and `TDVT_APP_PRIVATE_KEY` secrets, and a `tdvt-external` environment with the
+maintainers as required reviewers. A PR that intentionally changes TDVT results needs the baseline in
+clickhouse-tableau-tdvt updated to match.
+
 ## Acknowledgement
 
 Originally developed by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)

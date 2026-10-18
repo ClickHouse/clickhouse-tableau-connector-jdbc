@@ -1,0 +1,69 @@
+# Runs Tableau TDVT (ClickHouse/clickhouse-tableau-tdvt) against this connector and reports the
+# result as a check. TDVT itself runs on that repo's self-hosted Tableau host; this job only starts
+# the run and waits for it.
+#
+# pull_request_target, not pull_request: fork PRs get no secrets under pull_request, so they could
+# never start the run. This workflow comes from the base branch and never checks out PR code - it
+# only hands the PR's head SHA over. Fork PRs wait on the `tdvt-external` environment, so a
+# maintainer approves each commit before it runs on the host.
+name: TDVT
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Connector branch/tag/SHA to test (blank = the branch this workflow runs from)"
+        required: false
+      jdbc_version:
+        description: "clickhouse-jdbc version (blank = latest release)"
+        required: false
+
+# A new push supersedes the pending approval or wait; the cancel step stops the run it started.
+concurrency:
+  group: tdvt-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, inputs.ref) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  approve:
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    environment: tdvt-external
+    steps:
+      - run: echo "TDVT approved for $SHA"
+        env:
+          SHA: ${{ github.event.pull_request.head.sha }}
+
+  tdvt:
+    needs: approve
+    if: ${{ !cancelled() && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      APP_ID: ${{ secrets.TDVT_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
+    steps:
+      # The base branch's copy (pull_request_target) or the dispatched branch's - never the PR head.
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
+      - name: Run TDVT and wait for it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
+          INPUT_JDBC: ${{ inputs.jdbc_version }}
+          CORRELATION_ID: connector-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
+          export JDBC_VERSION="${JDBC_VERSION#v}"
+          bash .github/scripts/tdvt-run.sh run
+
+      - name: Cancel the TDVT run
+        if: cancelled()
+        run: bash .github/scripts/tdvt-run.sh cancel
