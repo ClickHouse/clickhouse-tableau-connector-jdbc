@@ -5,7 +5,8 @@
 # pull_request_target, not pull_request: fork PRs get no secrets under pull_request, so they could
 # never start the run. This workflow comes from the base branch and never checks out PR code - it
 # only hands the PR's head SHA over. Fork PRs wait on the `tdvt-external` environment, so a
-# maintainer approves each commit before it runs on the host.
+# maintainer approves each commit before it runs on the host, and run without the `cloud` target:
+# the connector builds the JDBC URL, so its code could send the Cloud password anywhere.
 name: TDVT
 
 on:
@@ -19,6 +20,9 @@ on:
       jdbc_version:
         description: "clickhouse-jdbc version (blank = latest release)"
         required: false
+      ch_targets:
+        description: "ClickHouse targets (CSV of: latest,head,cloud). Drop cloud for code you have not reviewed."
+        default: "latest,head,cloud"
 
 # A new push supersedes the pending approval or wait; the cancel step stops the run it started.
 concurrency:
@@ -34,9 +38,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: tdvt-external
     steps:
-      - run: echo "TDVT approved for $SHA"
+      # GitHub creates a referenced environment that does not exist, with no reviewers, so until an
+      # admin has configured it and set this variable the gate would wave every fork through.
+      - name: Check the approval gate is configured
         env:
+          READY: ${{ vars.TDVT_EXTERNAL_GATE_READY }}
           SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          [ "$READY" = true ] || { echo "::error::tdvt-external is not configured (TDVT_EXTERNAL_GATE_READY != true)"; exit 1; }
+          echo "TDVT approved for $SHA"
 
   tdvt:
     needs: approve
@@ -44,26 +54,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
-      APP_ID: ${{ secrets.TDVT_APP_ID }}
-      APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
+      CORRELATION_ID: connector-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       # The base branch's copy (pull_request_target) or the dispatched branch's - never the PR head.
       - uses: actions/checkout@v4
         with:
           sparse-checkout: .github/scripts
+          persist-credentials: false
 
       - name: Run TDVT and wait for it
         env:
+          APP_ID: ${{ secrets.TDVT_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
           GH_TOKEN: ${{ github.token }}
           CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
           INPUT_JDBC: ${{ inputs.jdbc_version }}
-          CORRELATION_ID: connector-${{ github.run_id }}-${{ github.run_attempt }}
+          CH_TARGETS: ${{ needs.approve.result == 'success' && 'latest,head' || inputs.ch_targets || 'latest,head,cloud' }}
         run: |
           set -euo pipefail
           JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
           export JDBC_VERSION="${JDBC_VERSION#v}"
           bash .github/scripts/tdvt-run.sh run
 
+      # always(), not cancelled(): a failed step (lost API, timeout) must not orphan a multi-hour run
+      # on the one Tableau host either. A no-op once the run was seen to complete.
       - name: Cancel the TDVT run
-        if: cancelled()
+        if: always()
+        env:
+          APP_ID: ${{ secrets.TDVT_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
         run: bash .github/scripts/tdvt-run.sh cancel

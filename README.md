@@ -157,13 +157,22 @@ The connector is being tested with the [TDVT framework](https://tableau.github.i
 
 Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which starts the suite in
 ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release,
-and reports the result as a check. PRs from forks wait for a maintainer to approve each commit (the
-`tdvt-external` environment). It can also be run by hand from the Actions tab with any branch, tag or SHA.
+and reports the result as a check. It can also be run by hand from the Actions tab with any branch, tag
+or SHA. If the TDVT host already has more than one run queued, the check fails fast; re-run it later.
 
-Setup: a GitHub App installed on clickhouse-tableau-tdvt with **Actions: read & write**, stored here as
-the `TDVT_APP_ID` and `TDVT_APP_PRIVATE_KEY` secrets, and a `tdvt-external` environment with the
-maintainers as required reviewers. A PR that intentionally changes TDVT results needs the baseline in
-clickhouse-tableau-tdvt updated to match.
+PRs from forks wait for a maintainer to approve each commit (the `tdvt-external` environment) and run
+without the ClickHouse Cloud target. Approving runs the PR's connector code on the TDVT host, so first
+read what it changes in `connectionBuilder.js`, `connectionProperties.js`, `connectionResolver.tdr` and
+`manifest.xml`: the connector builds the JDBC URL, so it decides where Tableau connects and what it sends.
+
+Setup:
+- A GitHub App installed on clickhouse-tableau-tdvt with **Actions: read & write**, stored here as the
+  `TDVT_APP_ID` and `TDVT_APP_PRIVATE_KEY` secrets. That lets anyone who controls this repo's default
+  branch start, cancel or delete runs in clickhouse-tableau-tdvt.
+- A `tdvt-external` environment with the maintainers as required reviewers and "Prevent self-review" on,
+  then the repository variable `TDVT_EXTERNAL_GATE_READY=true`. Fork PRs fail until it is set.
+
+A PR that intentionally changes TDVT results needs the baseline in clickhouse-tableau-tdvt updated to match.
 
 ## Acknowledgement
 
