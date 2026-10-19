@@ -160,7 +160,9 @@ in ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the lates
 and mirrors the result as a check - the same mechanism as clickhouse-java's nightly/release `tdvt` job
 (`.github/scripts/mirror_tdvt.py` is a copy of that repo's script). It can also be run by hand from the
 Actions tab with any branch, tag or SHA; manual runs leave out the ClickHouse Cloud target unless you
-add it. A new push supersedes the check, but a TDVT run already started finishes on its own.
+add it. A new push supersedes the check, but a TDVT run already started finishes on its own. As in
+clickhouse-java, the App token lasts an hour, so a run still queued or running after that fails the check
+(the TDVT run itself carries on); re-run the check.
 
 PRs from forks and from Dependabot wait for a maintainer to approve each commit (the `tdvt-external`
 environment) and run without the ClickHouse Cloud target. Approving runs the PR's connector code on the
@@ -168,7 +170,8 @@ TDVT host, so first read what it changes in `connectionBuilder.js`, `connectionP
 `connectionResolver.tdr` and `manifest.xml`: the connector builds the JDBC URL, so it decides where
 Tableau connects and what it sends.
 
-Setup:
+Setup (merge the `connector-pr` support in clickhouse-tableau-tdvt first: until then a dispatch starts
+nothing and the check fails after ~6 min with "did not appear"):
 - This repo needs access to the organization secrets `WORKFLOW_AUTH_PUBLIC_APP_ID` and
   `WORKFLOW_AUTH_PUBLIC_PRIVATE_KEY` (the GitHub App clickhouse-java uses to dispatch TDVT).
 - A `tdvt-external` environment with the maintainers as required reviewers and "Prevent self-review" on,
