@@ -2,7 +2,7 @@
 """Dispatch Tableau TDVT and mirror its result. Used by tdvt.yml.
 
 Copied from ClickHouse/clickhouse-java .github/scripts/mirror_tdvt.py; the only additions are the
-connector-pr event type and the --connector-ref / --ch-targets payload fields.
+connector-pr event type and the --connector-ref / --ch-targets payload fields, sent with -f.
 """
 
 from __future__ import annotations
@@ -33,11 +33,14 @@ def gh_json(*args: str) -> dict | list:
     return json.loads(result.stdout)
 
 
-def gh_api_call(path: str, *fields: str) -> None:
+def gh_api_call(path: str, *fields: str, strings: tuple[str, ...] = ()) -> None:
     args = ["gh", "api", path]
     for field in fields:
         flag = "-F" if field.startswith("client_payload[") else "-f"
         args.extend([flag, field])
+    # -F would read "@ref" as a file and turn "null"/"2024" into non-strings.
+    for field in strings:
+        args.extend(["-f", field])
     subprocess.run(args, check=True)
 
 
@@ -117,15 +120,18 @@ def main() -> None:
     created_since = (
         datetime.now(timezone.utc) - timedelta(seconds=CREATED_FILTER_SKEW_SEC)
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
-    payload = [
+    strings = []
+    if args.connector_ref:
+        strings.append(f"client_payload[connector_ref]={args.connector_ref}")
+    if args.ch_targets:
+        strings.append(f"client_payload[ch_targets]={args.ch_targets}")
+    gh_api_call(
+        f"repos/{args.tdvt_repo}/dispatches",
+        f"event_type={args.event_type}",
         f"client_payload[jdbc_version]={args.version}",
         f"client_payload[correlation_id]={args.correlation_id}",
-    ]
-    if args.connector_ref:
-        payload.append(f"client_payload[connector_ref]={args.connector_ref}")
-    if args.ch_targets:
-        payload.append(f"client_payload[ch_targets]={args.ch_targets}")
-    gh_api_call(f"repos/{args.tdvt_repo}/dispatches", f"event_type={args.event_type}", *payload)
+        strings=tuple(strings),
+    )
 
     run_id = None
     for _ in range(POLL_ATTEMPTS):
