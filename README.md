@@ -159,8 +159,8 @@ Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), wh
 ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release,
 and reports the result as a check. It can also be run by hand from the Actions tab with any branch, tag
 or SHA; manual runs leave out the ClickHouse Cloud target unless you add it. Runs queue for the one TDVT
-host; if one has not started after 2 h (an image update can hold the host that long), the check cancels
-it and fails - re-run it later.
+host; if one has not started after 2 h (an image update can hold it for hours, and a longer wait would
+not fit the job's time budget), the check cancels it and fails - re-run it later.
 
 PRs from forks and from Dependabot wait for a maintainer to approve each commit (the `tdvt-external`
 environment) and run without the ClickHouse Cloud target. Approving runs the PR's connector code on the TDVT host, so first

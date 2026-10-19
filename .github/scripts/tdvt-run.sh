@@ -3,7 +3,7 @@
 # for it, so its result becomes this repo's check.
 #
 #   tdvt-run.sh run      dispatch, find the run by correlation id, watch it to completion
-#   tdvt-run.sh cancel   cancel the run `run` started, unless it already saw it complete
+#   tdvt-run.sh cancel   cancel the run `run` started, unless `run` saw it complete or cancelled it
 #
 # Env: APP_ID, APP_PRIVATE_KEY (a GitHub App installed on the tdvt repo with Actions read/write),
 # CORRELATION_ID; for `run` also CONNECTOR_REF, JDBC_VERSION, CH_TARGETS.
