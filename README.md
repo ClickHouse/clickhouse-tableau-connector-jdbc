@@ -155,6 +155,10 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 ## Tests
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
+Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which reports the result as
+the `Tableau TDVT` check. PRs from forks run once a maintainer approves them. It can also be run by hand
+from the Actions tab.
+
 ## Acknowledgement
 
 Originally developed by [ANALYTIKA PLUS](https://analytikaplus.ru?utm_source=github&utm_medium=repo&utm_campaign=tableau_clickhouse_connector)

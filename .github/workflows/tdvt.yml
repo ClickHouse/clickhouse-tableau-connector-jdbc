@@ -1,0 +1,95 @@
+# Runs Tableau TDVT (ClickHouse/clickhouse-tableau-tdvt) against this connector and mirrors its
+# result as a check - the same way clickhouse-java's nightly/release `tdvt` job does.
+#
+# pull_request_target, not pull_request: fork PRs get no secrets under pull_request, so they could
+# never start the run. This workflow comes from the base branch and never checks out PR code - it
+# only hands the PR's head SHA over. Fork PRs wait on the `tdvt-external` environment, so a
+# maintainer approves each commit before it runs on the host, and run without the `cloud` target:
+# the connector builds the JDBC URL, so its code could send the Cloud password anywhere. Dependabot
+# PRs are same-repo but get full secrets under pull_request_target, so they are gated the same way.
+name: TDVT
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Connector branch/tag/SHA to test (blank = the branch this workflow runs from)"
+        required: false
+      jdbc_version:
+        description: "clickhouse-jdbc version (blank = latest release)"
+        required: false
+      ch_targets:
+        description: "ClickHouse targets (CSV of: latest,head,cloud). Add cloud only for code you have reviewed."
+        default: "latest,head"
+
+# A new push supersedes a pending approval or wait. The TDVT run it already started is not
+# cancelled; it finishes on its own.
+concurrency:
+  group: tdvt-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, inputs.ref) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  approve:
+    if: >-
+      github.event_name == 'pull_request_target' && (
+        github.event.pull_request.head.repo.full_name != github.repository ||
+        github.event.pull_request.user.login == 'dependabot[bot]' ||
+        github.actor == 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    environment: tdvt-external
+    steps:
+      # GitHub creates a referenced environment that does not exist, with no reviewers, so until an
+      # admin has configured it and set this variable the gate would wave every fork through.
+      - name: Check the approval gate is configured
+        env:
+          READY: ${{ vars.TDVT_EXTERNAL_GATE_READY }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          [ "$READY" = true ] || { echo "::error::tdvt-external is not configured (TDVT_EXTERNAL_GATE_READY != true)"; exit 1; }
+          echo "TDVT approved for $SHA"
+
+  tdvt:
+    name: "Tableau TDVT"
+    needs: approve
+    if: ${{ !cancelled() && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 150 # the TDVT matrix (latest/head/cloud, single-threaded) runs ~1h; allow for a queue
+    steps:
+      # The base branch's copy (pull_request_target) or the dispatched branch's - never the PR head.
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Mint a token for the TDVT repo (dispatch + read the run)
+        id: tdvt-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.WORKFLOW_AUTH_PUBLIC_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_AUTH_PUBLIC_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "clickhouse-tableau-tdvt"
+      - name: Run Tableau TDVT and mirror its result
+        env:
+          GH_TOKEN: ${{ steps.tdvt-token.outputs.token }}
+          CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
+          INPUT_JDBC: ${{ inputs.jdbc_version }}
+          # Gated (fork/Dependabot) PRs never get cloud; manual runs get what was asked (default no
+          # cloud); same-repo PRs get all three.
+          CH_TARGETS: >-
+            ${{ (needs.approve.result == 'success' && 'latest,head')
+             || (github.event_name == 'workflow_dispatch' && (inputs.ch_targets || 'latest,head'))
+             || 'latest,head,cloud' }}
+        run: |
+          set -euo pipefail
+          JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
+          python3 .github/scripts/mirror_tdvt.py \
+            --event-type connector-pr \
+            --version "${JDBC_VERSION#v}" \
+            --correlation-id "${{ github.repository }}#${{ github.run_id }}-${{ github.run_attempt }}" \
+            --connector-ref "$CONNECTOR_REF" \
+            --ch-targets "$CH_TARGETS"
