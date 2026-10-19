@@ -159,7 +159,7 @@ Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), wh
 ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release,
 and reports the result as a check. It can also be run by hand from the Actions tab with any branch, tag
 or SHA; manual runs leave out the ClickHouse Cloud target unless you add it. Runs queue for the one TDVT
-host; if one has not started after 4 h (an image update can hold the host that long), the check cancels
+host; if one has not started after 2 h (an image update can hold the host that long), the check cancels
 it and fails - re-run it later.
 
 PRs from forks and from Dependabot wait for a maintainer to approve each commit (the `tdvt-external`
@@ -172,7 +172,7 @@ Setup:
   `TDVT_APP_ID` and `TDVT_APP_PRIVATE_KEY` secrets. That lets anyone who controls this repo's default
   branch start, cancel or delete runs in clickhouse-tableau-tdvt.
 - A `tdvt-external` environment with the maintainers as required reviewers and "Prevent self-review" on,
-  then the repository variable `TDVT_EXTERNAL_GATE_READY=true`. Fork PRs fail until it is set.
+  then the repository variable `TDVT_EXTERNAL_GATE_READY=true`. Fork and Dependabot PRs fail until it is set.
 
 A PR that intentionally changes TDVT results needs the baseline in clickhouse-tableau-tdvt updated to match.
 

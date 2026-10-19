@@ -19,16 +19,16 @@ STATE_DIR="${RUNNER_TEMP:-/tmp}"
 RUN_ID_FILE="$STATE_DIR/tdvt-run-id"
 DONE_FILE="$STATE_DIR/tdvt-run-done"
 # TDVT and image-update runs queue for the one Tableau host. A TDVT run takes ~15 min, but an image
-# update can hold the host for hours; give up on a run that has not started by then, leaving room in
-# this job's 6 h cap for the run itself.
-MAX_QUEUE_WAIT=${MAX_QUEUE_WAIT:-$((4 * 3600))}
+# update can hold the host for hours. Give up on a run that has not started after 2 h: with the TDVT
+# workflow's own worst case (215 min of job timeouts) that still fits the run step's 350 min.
+MAX_QUEUE_WAIT=${MAX_QUEUE_WAIT:-$((2 * 3600))}
 
 b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
 
 have_app() { [ -n "${APP_ID:-}" ] && [ -n "${APP_PRIVATE_KEY:-}" ]; }
 
 mint_once() {
-  local now h p s jwt inst
+  local now h p s jwt inst tok
   now=$(date +%s)
   h=$(printf '{"alg":"RS256","typ":"JWT"}' | b64url)
   p=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' $((now - 60)) $((now + 540)) "$APP_ID" | b64url)
@@ -37,12 +37,12 @@ mint_once() {
   inst=$(curl -fsS -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github+json" \
     "https://api.github.com/repos/$TDVT_REPO/installation" | jq -r '.id // empty') || return 1
   [ -n "$inst" ] || return 1
-  GH_TOKEN=$(curl -fsS -X POST -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github+json" \
+  tok=$(curl -fsS -X POST -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github+json" \
     "https://api.github.com/app/installations/$inst/access_tokens" \
     -d "{\"repositories\":[\"${TDVT_REPO#*/}\"],\"permissions\":{\"actions\":\"write\"}}" | jq -r '.token // empty') || return 1
-  [ -n "$GH_TOKEN" ] || return 1
-  echo "::add-mask::$GH_TOKEN"
-  export GH_TOKEN
+  [ -n "$tok" ] || return 1
+  echo "::add-mask::$tok"
+  export GH_TOKEN=$tok
   MINTED_AT=$now
 }
 
@@ -52,7 +52,7 @@ mint() {
   for i in 1 2 3; do
     mint_once && return 0
     echo "::warning::minting a token for $TDVT_REPO failed (attempt $i)"
-    sleep 10
+    [ "$i" = 3 ] || sleep 10
   done
   echo "::error::could not mint a token for $TDVT_REPO - is the GitHub App installed there?"
   exit 1
@@ -100,9 +100,13 @@ run() {
     echo "$(date -u +%H:%M:%S) $state"
     [ "${state%% *}" = completed ] && break
     if [ "${state%% *}" != in_progress ] && [ $(( $(date +%s) - dispatched_at )) -gt "$MAX_QUEUE_WAIT" ]; then
-      gh run cancel "$id" -R "$TDVT_REPO" || true
-      touch "$DONE_FILE"
-      echo "::error::the TDVT host stayed busy for $((MAX_QUEUE_WAIT / 3600)) h; cancelled $url - re-run this check later"
+      # Marked done only once cancelled, so the always() cancel step retries a failed cancel.
+      if gh run cancel "$id" -R "$TDVT_REPO"; then
+        touch "$DONE_FILE"
+      else
+        echo "::warning::could not cancel $url; the cancel step will retry"
+      fi
+      echo "::error::the TDVT host stayed busy for $((MAX_QUEUE_WAIT / 60)) min; gave up on $url - re-run this check later"
       exit 1
     fi
     sleep 60
