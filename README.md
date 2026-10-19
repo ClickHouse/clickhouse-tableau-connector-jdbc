@@ -156,7 +156,7 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
 Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which dispatches the suite
-in ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release
+on ClickHouse's TDVT infrastructure against the PR's head commit and the latest clickhouse-jdbc release
 and mirrors the result as a check - the same mechanism as clickhouse-java's nightly/release `tdvt` job
 (`.github/scripts/mirror_tdvt.py` is a copy of that repo's script). It can also be run by hand from the
 Actions tab with any branch, tag or SHA; manual runs leave out the ClickHouse Cloud target unless you
@@ -170,7 +170,7 @@ TDVT host, so first read what it changes in `connectionBuilder.js`, `connectionP
 `connectionResolver.tdr` and `manifest.xml`: the connector builds the JDBC URL, so it decides where
 Tableau connects and what it sends.
 
-Setup (merge the `connector-pr` support in clickhouse-tableau-tdvt first: until then a dispatch starts
+Setup (the TDVT side must accept `connector-pr` dispatches first: until then a dispatch starts
 nothing and the check fails after ~6 min with "did not appear"):
 - This repo needs access to the organization secrets `WORKFLOW_AUTH_PUBLIC_APP_ID` and
   `WORKFLOW_AUTH_PUBLIC_PRIVATE_KEY` (the GitHub App clickhouse-java uses to dispatch TDVT).
@@ -180,7 +180,7 @@ nothing and the check fails after ~6 min with "did not appear"):
 - To make the check required, require both `approve` and `Tableau TDVT`: a rejected approval skips
   `Tableau TDVT`, and a skipped required check counts as passing.
 
-A PR that intentionally changes TDVT results needs the baseline in clickhouse-tableau-tdvt updated to match.
+A PR that intentionally changes TDVT results needs a maintainer to update the TDVT baseline to match.
 
 ## Acknowledgement
 
