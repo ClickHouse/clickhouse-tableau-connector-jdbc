@@ -1,6 +1,5 @@
-# Runs Tableau TDVT (ClickHouse/clickhouse-tableau-tdvt) against this connector and reports the
-# result as a check. TDVT itself runs on that repo's self-hosted Tableau host; this job only starts
-# the run and waits for it.
+# Runs Tableau TDVT (ClickHouse/clickhouse-tableau-tdvt) against this connector and mirrors its
+# result as a check - the same way clickhouse-java's nightly/release `tdvt` job does.
 #
 # pull_request_target, not pull_request: fork PRs get no secrets under pull_request, so they could
 # never start the run. This workflow comes from the base branch and never checks out PR code - it
@@ -25,7 +24,8 @@ on:
         description: "ClickHouse targets (CSV of: latest,head,cloud). Add cloud only for code you have reviewed."
         default: "latest,head"
 
-# A new push supersedes the pending approval or wait; the cancel step stops the run it started.
+# A new push supersedes a pending approval or wait. The TDVT run it already started is not
+# cancelled; it finishes on its own (~15 min).
 concurrency:
   group: tdvt-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, inputs.ref) }}
   cancel-in-progress: true
@@ -54,27 +54,28 @@ jobs:
           echo "TDVT approved for $SHA"
 
   tdvt:
+    name: "Tableau TDVT"
     needs: approve
     if: ${{ !cancelled() && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 360
-    env:
-      CORRELATION_ID: connector-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 150 # the TDVT matrix (latest/head/cloud, single-threaded) runs ~1h; allow for a queue
     steps:
       # The base branch's copy (pull_request_target) or the dispatched branch's - never the PR head.
-      - uses: actions/checkout@v4
+      - name: Check out Git repository
+        uses: actions/checkout@v4
         with:
-          sparse-checkout: .github/scripts
           persist-credentials: false
-
-      # Shorter than the job's: a step timeout is a plain failure, so the always() cancel step below
-      # still runs, without relying on how a job timeout treats it.
-      - name: Run TDVT and wait for it
-        timeout-minutes: 350
+      - name: Mint a token for the TDVT repo (dispatch + read the run)
+        id: tdvt-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.WORKFLOW_AUTH_PUBLIC_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_AUTH_PUBLIC_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "clickhouse-tableau-tdvt"
+      - name: Run Tableau TDVT and mirror its result
         env:
-          APP_ID: ${{ secrets.TDVT_APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.tdvt-token.outputs.token }}
           CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
           INPUT_JDBC: ${{ inputs.jdbc_version }}
           # Gated (fork/Dependabot) PRs never get cloud; manual runs get what was asked (default no
@@ -86,14 +87,9 @@ jobs:
         run: |
           set -euo pipefail
           JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
-          export JDBC_VERSION="${JDBC_VERSION#v}"
-          bash .github/scripts/tdvt-run.sh run
-
-      # always(), not cancelled(): a failed step (lost API, timeout) must not leave a run queued for or
-      # holding the one Tableau host either. A no-op once the run was seen to complete.
-      - name: Cancel the TDVT run
-        if: always()
-        env:
-          APP_ID: ${{ secrets.TDVT_APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
-        run: bash .github/scripts/tdvt-run.sh cancel
+          python3 .github/scripts/mirror_tdvt.py \
+            --event-type connector-pr \
+            --version "${JDBC_VERSION#v}" \
+            --correlation-id "${{ github.repository }}#${{ github.run_id }}-${{ github.run_attempt }}" \
+            --connector-ref "$CONNECTOR_REF" \
+            --ch-targets "$CH_TARGETS"

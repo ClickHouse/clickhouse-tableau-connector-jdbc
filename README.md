@@ -155,24 +155,27 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 ## Tests
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
-Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which starts the suite in
-ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release,
-and reports the result as a check. It can also be run by hand from the Actions tab with any branch, tag
-or SHA; manual runs leave out the ClickHouse Cloud target unless you add it. Runs queue for the one TDVT
-host; if one has not started after 2 h (an image update can hold it for hours, and a longer wait would
-not fit the job's time budget), the check cancels it and fails - re-run it later.
+Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which dispatches the suite
+in ClickHouse/clickhouse-tableau-tdvt against the PR's head commit and the latest clickhouse-jdbc release
+and mirrors the result as a check - the same mechanism as clickhouse-java's nightly/release `tdvt` job
+(`.github/scripts/mirror_tdvt.py` is a copy of that repo's script). It can also be run by hand from the
+Actions tab with any branch, tag or SHA; manual runs leave out the ClickHouse Cloud target unless you
+add it. A new push supersedes the check, but a TDVT run already started finishes on its own.
 
 PRs from forks and from Dependabot wait for a maintainer to approve each commit (the `tdvt-external`
-environment) and run without the ClickHouse Cloud target. Approving runs the PR's connector code on the TDVT host, so first
-read what it changes in `connectionBuilder.js`, `connectionProperties.js`, `connectionResolver.tdr` and
-`manifest.xml`: the connector builds the JDBC URL, so it decides where Tableau connects and what it sends.
+environment) and run without the ClickHouse Cloud target. Approving runs the PR's connector code on the
+TDVT host, so first read what it changes in `connectionBuilder.js`, `connectionProperties.js`,
+`connectionResolver.tdr` and `manifest.xml`: the connector builds the JDBC URL, so it decides where
+Tableau connects and what it sends.
 
 Setup:
-- A GitHub App installed on clickhouse-tableau-tdvt with **Actions: read & write**, stored here as the
-  `TDVT_APP_ID` and `TDVT_APP_PRIVATE_KEY` secrets. That lets anyone who controls this repo's default
-  branch start, cancel or delete runs in clickhouse-tableau-tdvt.
+- This repo needs access to the organization secrets `WORKFLOW_AUTH_PUBLIC_APP_ID` and
+  `WORKFLOW_AUTH_PUBLIC_PRIVATE_KEY` (the GitHub App clickhouse-java uses to dispatch TDVT).
 - A `tdvt-external` environment with the maintainers as required reviewers and "Prevent self-review" on,
-  then the repository variable `TDVT_EXTERNAL_GATE_READY=true`. Fork and Dependabot PRs fail until it is set.
+  then the repository variable `TDVT_EXTERNAL_GATE_READY=true`. Fork and Dependabot PRs fail until it is
+  set.
+- To make the check required, require both `approve` and `Tableau TDVT`: a rejected approval skips
+  `Tableau TDVT`, and a skipped required check counts as passing.
 
 A PR that intentionally changes TDVT results needs the baseline in clickhouse-tableau-tdvt updated to match.
 
