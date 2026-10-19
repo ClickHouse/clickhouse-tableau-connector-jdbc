@@ -8,8 +8,9 @@
 # Env: APP_ID, APP_PRIVATE_KEY (a GitHub App installed on the tdvt repo with Actions read/write),
 # CORRELATION_ID; for `run` also CONNECTOR_REF, JDBC_VERSION, CH_TARGETS.
 #
-# The tdvt repo is private and a run takes hours, but an App installation token lasts one hour, so
-# the token is re-minted as it ages rather than taken once from create-github-app-token.
+# The tdvt repo is private and a run can wait hours for the one Tableau host, but an App installation
+# token lasts one hour, so the token is re-minted as it ages rather than taken once from
+# create-github-app-token.
 set -euo pipefail
 
 TDVT_REPO=ClickHouse/clickhouse-tableau-tdvt
@@ -17,29 +18,44 @@ WORKFLOW=tableau-tdvt.yml
 STATE_DIR="${RUNNER_TEMP:-/tmp}"
 RUN_ID_FILE="$STATE_DIR/tdvt-run-id"
 DONE_FILE="$STATE_DIR/tdvt-run-done"
-# The TDVT workflow queues on one Tableau host. More than this many runs ahead and the wait plus our
-# own run would outlast this job's 6 h cap, so refuse up front instead of timing out.
-MAX_AHEAD=1
+# TDVT and image-update runs queue for the one Tableau host. A TDVT run takes ~15 min, but an image
+# update can hold the host for hours; give up on a run that has not started by then, leaving room in
+# this job's 6 h cap for the run itself.
+MAX_QUEUE_WAIT=${MAX_QUEUE_WAIT:-$((4 * 3600))}
 
 b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
 
-mint() {
+have_app() { [ -n "${APP_ID:-}" ] && [ -n "${APP_PRIVATE_KEY:-}" ]; }
+
+mint_once() {
   local now h p s jwt inst
   now=$(date +%s)
   h=$(printf '{"alg":"RS256","typ":"JWT"}' | b64url)
   p=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' $((now - 60)) $((now + 540)) "$APP_ID" | b64url)
-  s=$(printf '%s.%s' "$h" "$p" | openssl dgst -sha256 -sign <(printf '%s\n' "$APP_PRIVATE_KEY") -binary | b64url)
+  s=$(printf '%s.%s' "$h" "$p" | openssl dgst -sha256 -sign <(printf '%s\n' "$APP_PRIVATE_KEY") -binary | b64url) || return 1
   jwt="$h.$p.$s"
   inst=$(curl -fsS -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github+json" \
-    "https://api.github.com/repos/$TDVT_REPO/installation" | jq -r '.id // empty')
-  [ -n "$inst" ] || { echo "::error::the GitHub App is not installed on $TDVT_REPO"; exit 1; }
+    "https://api.github.com/repos/$TDVT_REPO/installation" | jq -r '.id // empty') || return 1
+  [ -n "$inst" ] || return 1
   GH_TOKEN=$(curl -fsS -X POST -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github+json" \
     "https://api.github.com/app/installations/$inst/access_tokens" \
-    -d "{\"repositories\":[\"${TDVT_REPO#*/}\"],\"permissions\":{\"actions\":\"write\"}}" | jq -r '.token // empty')
-  [ -n "$GH_TOKEN" ] || { echo "::error::could not mint an installation token for $TDVT_REPO"; exit 1; }
+    -d "{\"repositories\":[\"${TDVT_REPO#*/}\"],\"permissions\":{\"actions\":\"write\"}}" | jq -r '.token // empty') || return 1
+  [ -n "$GH_TOKEN" ] || return 1
   echo "::add-mask::$GH_TOKEN"
   export GH_TOKEN
   MINTED_AT=$now
+}
+
+mint() {
+  have_app || { echo "::error::TDVT_APP_ID / TDVT_APP_PRIVATE_KEY are not set"; exit 1; }
+  local i
+  for i in 1 2 3; do
+    mint_once && return 0
+    echo "::warning::minting a token for $TDVT_REPO failed (attempt $i)"
+    sleep 10
+  done
+  echo "::error::could not mint a token for $TDVT_REPO - is the GitHub App installed there?"
+  exit 1
 }
 
 fresh() { [ $(( $(date +%s) - MINTED_AT )) -lt 2700 ] || mint; }
@@ -51,18 +67,12 @@ find_run() {
 
 run() {
   mint
-  local ahead
-  ahead=$(gh api "repos/$TDVT_REPO/actions/workflows/$WORKFLOW/runs?per_page=50" \
-    --jq '[.workflow_runs[] | select(.status != "completed")] | length')
-  if [ "$ahead" -gt "$MAX_AHEAD" ]; then
-    echo "::error::the TDVT host is busy ($ahead runs queued or running) - re-run this check later"
-    exit 1
-  fi
-
   echo "Dispatching $WORKFLOW: connector_ref=$CONNECTOR_REF jdbc_version=$JDBC_VERSION ch_targets=$CH_TARGETS corr=$CORRELATION_ID"
   gh workflow run "$WORKFLOW" -R "$TDVT_REPO" --ref main \
     -f connector_ref="$CONNECTOR_REF" -f jdbc_version="$JDBC_VERSION" \
     -f ch_targets="$CH_TARGETS" -f correlation_id="$CORRELATION_ID"
+  local dispatched_at
+  dispatched_at=$(date +%s)
 
   local id=""
   for _ in $(seq 1 30); do
@@ -89,6 +99,12 @@ run() {
     fails=0
     echo "$(date -u +%H:%M:%S) $state"
     [ "${state%% *}" = completed ] && break
+    if [ "${state%% *}" != in_progress ] && [ $(( $(date +%s) - dispatched_at )) -gt "$MAX_QUEUE_WAIT" ]; then
+      gh run cancel "$id" -R "$TDVT_REPO" || true
+      touch "$DONE_FILE"
+      echo "::error::the TDVT host stayed busy for $((MAX_QUEUE_WAIT / 3600)) h; cancelled $url - re-run this check later"
+      exit 1
+    fi
     sleep 60
   done
   touch "$DONE_FILE"
@@ -104,6 +120,8 @@ run() {
 
 cancel() {
   [ ! -e "$DONE_FILE" ] || exit 0
+  # Without the App nothing can have been dispatched, and there is nothing to cancel with.
+  have_app || { echo "no TDVT run was started"; exit 0; }
   mint
   local id
   id=$(cat "$RUN_ID_FILE" 2>/dev/null || true)

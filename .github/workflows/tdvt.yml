@@ -6,7 +6,8 @@
 # never start the run. This workflow comes from the base branch and never checks out PR code - it
 # only hands the PR's head SHA over. Fork PRs wait on the `tdvt-external` environment, so a
 # maintainer approves each commit before it runs on the host, and run without the `cloud` target:
-# the connector builds the JDBC URL, so its code could send the Cloud password anywhere.
+# the connector builds the JDBC URL, so its code could send the Cloud password anywhere. Dependabot
+# PRs are same-repo but get full secrets under pull_request_target, so they are gated the same way.
 name: TDVT
 
 on:
@@ -21,8 +22,8 @@ on:
         description: "clickhouse-jdbc version (blank = latest release)"
         required: false
       ch_targets:
-        description: "ClickHouse targets (CSV of: latest,head,cloud). Drop cloud for code you have not reviewed."
-        default: "latest,head,cloud"
+        description: "ClickHouse targets (CSV of: latest,head,cloud). Add cloud only for code you have reviewed."
+        default: "latest,head"
 
 # A new push supersedes the pending approval or wait; the cancel step stops the run it started.
 concurrency:
@@ -34,7 +35,11 @@ permissions:
 
 jobs:
   approve:
-    if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository
+    if: >-
+      github.event_name == 'pull_request_target' && (
+        github.event.pull_request.head.repo.full_name != github.repository ||
+        github.event.pull_request.user.login == 'dependabot[bot]' ||
+        github.actor == 'dependabot[bot]')
     runs-on: ubuntu-latest
     environment: tdvt-external
     steps:
@@ -62,22 +67,30 @@ jobs:
           sparse-checkout: .github/scripts
           persist-credentials: false
 
+      # Shorter than the job's: a step timeout is a plain failure, so the always() cancel step below
+      # still runs, without relying on how a job timeout treats it.
       - name: Run TDVT and wait for it
+        timeout-minutes: 350
         env:
           APP_ID: ${{ secrets.TDVT_APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.TDVT_APP_PRIVATE_KEY }}
           GH_TOKEN: ${{ github.token }}
           CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
           INPUT_JDBC: ${{ inputs.jdbc_version }}
-          CH_TARGETS: ${{ needs.approve.result == 'success' && 'latest,head' || inputs.ch_targets || 'latest,head,cloud' }}
+          # Gated (fork/Dependabot) PRs never get cloud; manual runs get what was asked (default no
+          # cloud); same-repo PRs get all three.
+          CH_TARGETS: >-
+            ${{ (needs.approve.result == 'success' && 'latest,head')
+             || (github.event_name == 'workflow_dispatch' && (inputs.ch_targets || 'latest,head'))
+             || 'latest,head,cloud' }}
         run: |
           set -euo pipefail
           JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
           export JDBC_VERSION="${JDBC_VERSION#v}"
           bash .github/scripts/tdvt-run.sh run
 
-      # always(), not cancelled(): a failed step (lost API, timeout) must not orphan a multi-hour run
-      # on the one Tableau host either. A no-op once the run was seen to complete.
+      # always(), not cancelled(): a failed step (lost API, timeout) must not leave a run queued for or
+      # holding the one Tableau host either. A no-op once the run was seen to complete.
       - name: Cancel the TDVT run
         if: always()
         env:
