@@ -156,8 +156,8 @@ ClickHouse has a huge number of functions that can be used for data analysis —
 The connector is being tested with the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) and currently maintains a 97% coverage ratio.
 
 Every PR runs TDVT through the [`TDVT` workflow](.github/workflows/tdvt.yml), which reports the result as
-the `Tableau TDVT` check. PRs from forks run once a maintainer approves them. It can also be run by hand
-from the Actions tab.
+the `Tableau TDVT` check. PRs from forks and Dependabot run when a maintainer adds the `run-cloud-tests`
+label, once per labelled commit. It can also be run by hand from the Actions tab.
 
 ## Acknowledgement
 

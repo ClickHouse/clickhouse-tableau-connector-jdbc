@@ -3,15 +3,16 @@
 #
 # pull_request_target, not pull_request: fork PRs get no secrets under pull_request, so they could
 # never start the run. This workflow comes from the base branch and never checks out PR code - it
-# only hands the PR's head SHA over. Fork PRs wait on the `tdvt-external` environment, so a
-# maintainer approves each commit before it runs on the host, and run without the `cloud` target:
-# the connector builds the JDBC URL, so its code could send the Cloud password anywhere. Dependabot
-# PRs are same-repo but get full secrets under pull_request_target, so they are gated the same way.
+# only hands the PR's head SHA over. Same-repo PRs run on every push. Fork and Dependabot PRs run
+# only when a maintainer adds the `run-cloud-tests` label, as in our other connectors: the label
+# approves the head SHA it was added on, and the workflow removes it so a later push needs a new
+# one. Every PR run includes the `cloud` target, so review a fork PR before labelling it - the
+# connector builds the JDBC URL and could send the Cloud password anywhere.
 name: TDVT
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
     inputs:
       ref:
@@ -21,42 +22,51 @@ on:
         description: "clickhouse-jdbc version (blank = latest release)"
         required: false
       ch_targets:
-        description: "ClickHouse targets (CSV of: latest,head,cloud). Add cloud only for code you have reviewed."
-        default: "latest,head"
+        description: "ClickHouse targets (CSV of: latest,head,cloud)"
+        default: "latest,head,cloud"
 
-# A new push supersedes a pending approval or wait. The TDVT run it already started is not
-# cancelled; it finishes on its own.
+# A new run supersedes a pending wait; the TDVT run it already started finishes on its own. Events
+# that start nothing (a push to a fork PR, any other label) get their own group so they cannot
+# cancel a labelled run.
 concurrency:
-  group: tdvt-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, inputs.ref) }}
+  group: >-
+    tdvt-${{ github.event.pull_request.number || format('{0}-{1}', github.ref, inputs.ref) }}${{
+    github.event_name == 'pull_request_target' && !((
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      github.event.action != 'labeled'
+    ) || (
+      github.event.action == 'labeled' && github.event.label.name == 'run-cloud-tests'
+    )) && format('-skip-{0}', github.run_id) || '' }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  approve:
-    if: >-
-      github.event_name == 'pull_request_target' && (
-        github.event.pull_request.head.repo.full_name != github.repository ||
-        github.event.pull_request.user.login == 'dependabot[bot]' ||
-        github.actor == 'dependabot[bot]')
+  unlabel:
+    if: github.event.action == 'labeled' && github.event.label.name == 'run-cloud-tests'
     runs-on: ubuntu-latest
-    environment: tdvt-external
+    permissions:
+      pull-requests: write
     steps:
-      # GitHub creates a referenced environment that does not exist, with no reviewers, so until an
-      # admin has configured it and set this variable the gate would wave every fork through.
-      - name: Check the approval gate is configured
+      - name: Remove the run-cloud-tests label
         env:
-          READY: ${{ vars.TDVT_EXTERNAL_GATE_READY }}
-          SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          [ "$READY" = true ] || { echo "::error::tdvt-external is not configured (TDVT_EXTERNAL_GATE_READY != true)"; exit 1; }
-          echo "TDVT approved for $SHA"
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$PR/labels/run-cloud-tests" || true
 
   tdvt:
     name: "Tableau TDVT"
-    needs: approve
-    if: ${{ !cancelled() && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    # Same-repo PRs on open/push (not on labels); fork and Dependabot PRs only on run-cloud-tests.
+    if: >-
+      github.event_name == 'workflow_dispatch' || (
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.user.login != 'dependabot[bot]' &&
+        github.event.action != 'labeled'
+      ) || (
+        github.event.action == 'labeled' && github.event.label.name == 'run-cloud-tests'
+      )
     runs-on: "ubuntu-latest"
     timeout-minutes: 150 # the TDVT matrix (latest/head/cloud, single-threaded) runs ~1h; allow for a queue
     steps:
@@ -78,12 +88,7 @@ jobs:
           GH_TOKEN: ${{ steps.tdvt-token.outputs.token }}
           CONNECTOR_REF: ${{ github.event.pull_request.head.sha || inputs.ref || github.sha }}
           INPUT_JDBC: ${{ inputs.jdbc_version }}
-          # Gated (fork/Dependabot) PRs never get cloud; manual runs get what was asked (default no
-          # cloud); same-repo PRs get all three.
-          CH_TARGETS: >-
-            ${{ (needs.approve.result == 'success' && 'latest,head')
-             || (github.event_name == 'workflow_dispatch' && (inputs.ch_targets || 'latest,head'))
-             || 'latest,head,cloud' }}
+          CH_TARGETS: ${{ inputs.ch_targets || 'latest,head,cloud' }}
         run: |
           set -euo pipefail
           JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
