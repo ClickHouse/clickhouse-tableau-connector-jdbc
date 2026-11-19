@@ -93,7 +93,6 @@ jobs:
           set -euo pipefail
           JDBC_VERSION="${INPUT_JDBC:-$(gh api repos/ClickHouse/clickhouse-java/releases/latest --jq .tag_name)}"
           python3 .github/scripts/mirror_tdvt.py \
-            --event-type connector-pr \
             --version "${JDBC_VERSION#v}" \
             --correlation-id "${{ github.repository }}#${{ github.run_id }}-${{ github.run_attempt }}" \
             --connector-ref "$CONNECTOR_REF" \

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Dispatch Tableau TDVT and mirror its result. Used by tdvt.yml.
 
-Copied from ClickHouse/clickhouse-java .github/scripts/mirror_tdvt.py; the only additions are the
-connector-pr event type and the --connector-ref / --ch-targets payload fields, sent with -f.
+Copied from ClickHouse/clickhouse-java .github/scripts/mirror_tdvt.py, narrowed to this repo's one
+event type (connector-pr) and extended with the --connector-ref / --ch-targets payload fields, sent with -f.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 TDVT_REPO = "ClickHouse/clickhouse-tableau-tdvt"
+EVENT_TYPE = "connector-pr"
 WORKFLOW = "tableau-tdvt.yml"
 POLL_ATTEMPTS = 24
 POLL_INTERVAL_SEC = 15
@@ -100,7 +101,6 @@ def write_summary(version: str, run_url: str, info: dict) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--event-type", required=True, choices=("jdbc-snapshot", "jdbc-release", "connector-pr"))
     parser.add_argument("--version", required=True)
     parser.add_argument("--correlation-id", required=True)
     parser.add_argument("--tdvt-repo", default=TDVT_REPO)
@@ -127,7 +127,7 @@ def main() -> None:
         strings.append(f"client_payload[ch_targets]={args.ch_targets}")
     gh_api_call(
         f"repos/{args.tdvt_repo}/dispatches",
-        f"event_type={args.event_type}",
+        f"event_type={EVENT_TYPE}",
         f"client_payload[jdbc_version]={args.version}",
         f"client_payload[correlation_id]={args.correlation_id}",
         strings=tuple(strings),
