@@ -4,6 +4,8 @@
 
 This is an extension for Tableau Desktop / Tableau Server that simplifies the process of connecting Tableau to ClickHouse and extends support for standard Tableau functionality when working with ClickHouse (as compared to Generic ODBC/JDBC)
 
+The connector works with both ClickHouse Cloud and self-hosted ClickHouse. You can [start a free Cloud trial](https://console.clickhouse.cloud/signUp?utm_medium=referral&utm_source=github&utm_campaign=readme&utm_content=clickhouse-tableau-connector-jdbc) or [install ClickHouse](https://clickhouse.com/docs/get-started/setup/install) locally.
+
 ## Features
 
 - In comparison with **Other Databases (ODBC)**: this connector uses the JDBC driver, which is faster than the ODBC driver in some cases (for example, creating Extracts), and is also much easier to install than ODBC (a cross-platform jar file, which does not require compiling for individual platforms).
