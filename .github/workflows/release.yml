@@ -53,7 +53,7 @@ jobs:
       - name: Sign binary
         working-directory: clickhouse-tableau-jdbc/signing_utility
         run: | 
-          jarsigner -keystore NONE  -storepass NONE -storetype PKCS11 -sigalg SHA256withRSA -providerClass sun.security.pkcs11.SunPKCS11 -providerArg pkcs11properties.cfg -signedjar  clickhouse_jdbc_signed.taco  $TACO_FILE $DIGICERT_KEY_ALIAS  -tsa  http://timestamp.digicert.com
+          jarsigner -keystore NONE -certchain intermediate.pem -storepass NONE -storetype PKCS11 -sigalg SHA256withRSA -providerClass sun.security.pkcs11.SunPKCS11 -providerArg pkcs11properties.cfg -signedjar  clickhouse_jdbc_signed.taco  $TACO_FILE $DIGICERT_KEY_ALIAS  -tsa  http://timestamp.digicert.com
         shell: bash
 
       - name: Upload the taco
